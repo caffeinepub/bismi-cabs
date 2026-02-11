@@ -1,38 +1,42 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T16:24:18.550Z",
+  "generatedAt": "2026-02-11T17:50:38.013Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 1,
+    "total": 2,
     "implemented": 1,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Fix the Trip Total Calculator so that when the user selects the one-way trip type and enters 130 km, the calculated amount is based on one-way pricing (and one-way minimum coverage if applicable) rather than round-trip minimum coverage (250 km).",
+        "summary": "Persist each user’s profile (including the uploaded display picture reference) in stable storage so the profile photo remains saved after canister upgrades/redeploys.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Update the Profile page success messaging (English) to clearly indicate that the uploaded display picture is saved to the user profile permanently and will remain available next time they sign in.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/utils/rates.ts",
-          "frontend/src/components/TripTotalCalculator.tsx"
+          "frontend/src/pages/ProfilePage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/utils/rates.ts",
-          "frontend/src/components/TripTotalCalculator.tsx"
+          "frontend/src/pages/ProfilePage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/TripTotalCalculator.tsx",
-    "frontend/src/utils/rates.ts",
-    "frontend/src/utils/urlParams.ts",
+    "frontend/src/pages/ProfilePage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

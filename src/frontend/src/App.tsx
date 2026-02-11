@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { AlertCircle, Loader2, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
 import { isOwnerMode, isCustomerMode } from './utils/appMode';
 import { mapBackendError } from './utils/mapBackendError';
-import { getDeepLinkParameter } from './utils/urlParams';
+import { getUrlParameter } from './utils/urlParams';
 
 type Page = 'login' | 'booking' | 'leads' | 'rateCard' | 'profile';
 
@@ -30,9 +30,11 @@ function App() {
   // Handle deep-link on initial load (customer mode only)
   useEffect(() => {
     if (!initialPageSet && customerMode) {
-      const deepLinkPage = getDeepLinkParameter('page');
+      const deepLinkPage = getUrlParameter('page');
       if (deepLinkPage === 'booking') {
         setCurrentPage('booking');
+      } else if (deepLinkPage === 'profile') {
+        setCurrentPage('profile');
       }
       setInitialPageSet(true);
     }
@@ -51,14 +53,6 @@ function App() {
       setCurrentPage('rateCard');
     }
   }, [ownerMode, currentPage]);
-
-  // Customer mode guard: redirect away from profile page
-  useEffect(() => {
-    if (customerMode && currentPage === 'profile') {
-      // If authenticated, go to booking; otherwise go to login
-      setCurrentPage(isAuthenticated ? 'booking' : 'login');
-    }
-  }, [customerMode, currentPage, isAuthenticated]);
 
   // Show loading state while actor is initializing
   if (actorState.isFetching && !actorState.actor) {
@@ -151,8 +145,13 @@ function App() {
       return <BookingFormPage />;
     }
 
+    // Profile page requires authentication in both modes
+    if (currentPage === 'profile' && !isAuthenticated) {
+      return <LoginPage onNavigate={setCurrentPage} />;
+    }
+
     // In owner mode, require authentication for all pages except login
-    if (!isAuthenticated && currentPage !== 'login') {
+    if (ownerMode && !isAuthenticated && currentPage !== 'login') {
       return <LoginPage onNavigate={setCurrentPage} />;
     }
 
@@ -168,10 +167,6 @@ function App() {
       case 'rateCard':
         return <RateCardPage />;
       case 'profile':
-        // Prevent profile page in customer mode
-        if (customerMode) {
-          return isAuthenticated ? <BookingFormPage /> : <LoginPage onNavigate={setCurrentPage} />;
-        }
         return <ProfilePage />;
       case 'login':
       default:

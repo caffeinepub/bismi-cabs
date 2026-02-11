@@ -1,27 +1,20 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix one-way trip calculator minimum distance and pricing logic",
+  "title": "Profile photo upload: clarify permanent save messaging",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Ensure TripTotalCalculator uses trip-type-specific rates, allowance, and minimum billable distance (one-way vs round trip) without mixing values.",
+      "id": "REQ-2",
+      "summary": "Update Profile page success messaging to clearly state the display picture is saved permanently to the user profile and will be available next sign-in.",
       "acceptanceCriteria": [
-        "In TripTotalCalculator, selecting Trip Type = \"One-way drop\" and entering Distance = 130 km computes the total using one-way per-km rate and one-way driver allowance (not round-trip values).",
-        "If the calculator applies a minimum billable distance, it uses MINIMUM_COVERAGE.oneWay for one-way trips and MINIMUM_COVERAGE.roundTrip for round trips, and never mixes them.",
-        "Switching Trip Type between one-way and round trip updates the displayed rate/allowance/billable distance immediately and consistently.",
-        "No backend changes are required; the fix is fully contained in the frontend calculator behavior."
+        "After a successful upload, the UI displays an English success message that explicitly states the photo is saved permanently (wording may vary but must be unambiguous).",
+        "No changes are made to any frontend immutablePaths (e.g., useInternetIdentity/useActor/main.tsx and components/ui)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/utils/rates.ts",
+          "path": "frontend/src/pages/ProfilePage.tsx",
           "operation": "modify",
-          "description": "Add/adjust helper(s) to retrieve the trip-type-specific minimum coverage and to compute billable distance (e.g., max(actualDistance, MINIMUM_COVERAGE[tripType])) so the calculator cannot accidentally apply round-trip minimums to one-way trips."
-        },
-        {
-          "path": "frontend/src/components/TripTotalCalculator.tsx",
-          "operation": "modify",
-          "description": "Update calculation to use billableDistance based on the selected trip type (oneWay vs roundTrip), then compute distance cost from billableDistance × perKmRate and add the correct driver allowance; update the breakdown UI so the shown distance/rate/allowance align with the current trip type immediately after switching."
+          "description": "Update the post-upload success Alert message copy to explicitly state the display picture is saved permanently to the user's profile and will still be available next time they sign in. Use the existing shadcn-ui Alert component for this message (capability: consistent, accessible success messaging). Verify the component's usage instructions before implementing."
         }
       ]
     }

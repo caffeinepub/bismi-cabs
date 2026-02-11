@@ -7,7 +7,7 @@ export type AppMode = 'customer' | 'owner';
  * This URL is guaranteed to work when shared with customers
  * 
  * @param mode - Optional mode parameter to include in the URL
- * @param deepLink - Optional deep-link parameter (e.g., 'booking' for customer mode)
+ * @param deepLink - Optional deep-link parameter (e.g., 'booking' or 'profile')
  * @returns The canonical URL that can be shared
  */
 export function getCanonicalUrl(mode?: AppMode, deepLink?: string): string {
@@ -36,8 +36,8 @@ export function getCanonicalUrl(mode?: AppMode, deepLink?: string): string {
     params.set('mode', mode);
   }
   
-  // Add deep-link parameter if specified (only for customer mode)
-  if (deepLink && mode === 'customer') {
+  // Add deep-link parameter if specified
+  if (deepLink) {
     params.set('page', deepLink);
   }
   
@@ -50,7 +50,7 @@ export function getCanonicalUrl(mode?: AppMode, deepLink?: string): string {
  * Copies a canonical URL to the clipboard
  * 
  * @param mode - Optional mode parameter to include in the URL
- * @param deepLink - Optional deep-link parameter (e.g., 'booking' for customer mode)
+ * @param deepLink - Optional deep-link parameter (e.g., 'booking' or 'profile')
  * @returns Promise that resolves to true if successful, false otherwise
  */
 export async function copyCanonicalUrlToClipboard(mode?: AppMode, deepLink?: string): Promise<boolean> {

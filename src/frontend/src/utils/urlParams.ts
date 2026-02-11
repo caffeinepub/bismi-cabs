@@ -206,15 +206,3 @@ export function getSecretFromHash(paramName: string): string | null {
 export function getSecretParameter(paramName: string): string | null {
     return getSecretFromHash(paramName);
 }
-
-/**
- * Gets a deep-link parameter for customer booking flow
- * Used to navigate directly to specific pages (e.g., booking page)
- * Works with both regular query params and hash-based routing
- *
- * @param paramName - The name of the deep-link parameter
- * @returns The parameter value if found, null otherwise
- */
-export function getDeepLinkParameter(paramName: string): string | null {
-    return getUrlParameter(paramName);
-}

@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-fix-the-trip-total-calculator-so-that-when-the-user-selects-the-one-way-trip-type-and-enters-130-km-the-calculated-amount-is-based-on-one-way-pricing-and-one-way-minimum-coverage-if-applicable-rather-than-round-trip-minimum-coverage-250-km",
-      "featureTitle": "Fix the Trip Total Calculator so that when the user selects the one-way trip type and enters 130 km, the calculated amount is based on one-way pricing (and one-way minimum coverage if applicable) rather than round-trip minimum coverage (250 km).",
+      "featureId": "feature-update-the-profile-page-success-messaging-english-to-clearly-indicate-that-the-uploaded-display-picture-is-saved-to-the-user-profile-permanently-and-will-remain-available-next-time-they-sign-in",
+      "featureTitle": "Update the Profile page success messaging (English) to clearly indicate that the uploaded display picture is saved to the user profile permanently and will remain available next time they sign in.",
       "files": [
-        "frontend/src/components/TripTotalCalculator.tsx",
-        "frontend/src/utils/rates.ts"
+        "frontend/src/pages/ProfilePage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -18,7 +17,7 @@
         "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-1"
+        "REQ-2"
       ],
       "confidence": "high"
     }

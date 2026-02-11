@@ -1,35 +1,52 @@
 {
   "kind": "build_request",
-  "title": "Fix customer booking trip calculator using round-trip minimum distance for one-way trips",
+  "title": "Persist profile photo (display picture) permanently across upgrades",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Fix the Trip Total Calculator so that when the user selects the one-way trip type and enters 130 km, the calculated amount is based on one-way pricing (and one-way minimum coverage if applicable) rather than round-trip minimum coverage (250 km).",
-      "target": "frontend",
+      "text": "Persist each user’s profile (including the uploaded display picture reference) in stable storage so the profile photo remains saved after canister upgrades/redeploys.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "recent-messages-user-1"
+          "msg-user-1"
         ],
         "quotes": [
-          "Costmer link calculater one way trip 130km amount showing Round trip 250km amount"
+          "Upload this profile photo permanent"
         ]
       },
       "acceptanceCriteria": [
-        "In TripTotalCalculator, selecting Trip Type = \"One-way drop\" and entering Distance = 130 km computes the total using one-way per-km rate and one-way driver allowance (not round-trip values).",
-        "If the calculator applies a minimum billable distance, it uses MINIMUM_COVERAGE.oneWay for one-way trips and MINIMUM_COVERAGE.roundTrip for round trips, and never mixes them.",
-        "Switching Trip Type between one-way and round trip updates the displayed rate/allowance/billable distance immediately and consistently.",
-        "No backend changes are required; the fix is fully contained in the frontend calculator behavior."
+        "After a user uploads a display picture, reloading the app still shows the same display picture for that user.",
+        "After a canister upgrade/redeploy, the previously uploaded display picture is still present when calling getCallerUserProfile for the same principal.",
+        "The solution uses stable persistence (e.g., stable vars + preupgrade/postupgrade) rather than in-memory-only Maps, for the userProfiles data."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Update the Profile page success messaging (English) to clearly indicate that the uploaded display picture is saved to the user profile permanently and will remain available next time they sign in.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-1"
+        ],
+        "quotes": [
+          "Upload this profile photo permanent"
+        ]
+      },
+      "acceptanceCriteria": [
+        "After a successful upload, the UI displays an English success message that explicitly states the photo is saved permanently (wording may vary but must be unambiguous).",
+        "No changes are made to any frontend immutablePaths (e.g., useInternetIdentity/useActor/main.tsx and components/ui)."
       ]
     }
   ],
   "constraints": [
-    "Use English for any user-facing text.",
-    "Do not edit files under frontend/src/components/ui or any other paths listed as immutable in SYSTEM_CONTEXT."
+    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
+    "Only Internet Identity authentication is supported; do not add third-party auth.",
+    "Do not edit files under frontend immutablePaths listed in SYSTEM_CONTEXT."
   ],
   "nonGoals": [
-    "Changing the published rate card values (per-km rates, allowances, or minimum coverage numbers) unless required to fix the one-way vs round-trip mismatch.",
-    "Adding new authentication or link-sharing features (customer link deep-linking is already implemented)."
+    "Add Open Graph / link preview images for WhatsApp/Facebook sharing.",
+    "Implement image editing/cropping/compression workflows beyond the existing upload validation."
   ],
   "imageRequirements": {
     "required": [],

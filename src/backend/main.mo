@@ -97,6 +97,10 @@ actor {
     pickupDateTime : Text,
     notes : ?Text,
   ) : async BookingLead {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can create booking leads");
+    };
+
     let leadId = nextId;
     nextId += 1;
 
@@ -191,3 +195,4 @@ actor {
     isAuthorizedStaff(caller) or caller.toText() == bharzIznqv72xd7IigbgpPrincipal.toText();
   };
 };
+

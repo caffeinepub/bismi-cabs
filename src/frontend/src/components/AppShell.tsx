@@ -45,9 +45,6 @@ export function AppShell({ children, onNavigate }: AppShellProps) {
   // 4. User is authorized
   const showLeadsNav = ownerMode && isAuthenticated && isAuthorizationFetched && isAuthorized === true;
 
-  // Show profile menu item only in owner mode (hide in customer mode)
-  const showProfileMenuItem = ownerMode;
-
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* Header */}
@@ -90,12 +87,10 @@ export function AppShell({ children, onNavigate }: AppShellProps) {
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  {showProfileMenuItem && (
-                    <DropdownMenuItem onClick={() => onNavigate('profile')}>
-                      <User className="mr-2 h-4 w-4" />
-                      Profile
-                    </DropdownMenuItem>
-                  )}
+                  <DropdownMenuItem onClick={() => onNavigate('profile')}>
+                    <User className="mr-2 h-4 w-4" />
+                    Profile
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             )}

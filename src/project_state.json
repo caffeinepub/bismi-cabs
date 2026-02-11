@@ -3,22 +3,35 @@
   "projectStateVersion": 3,
   "summary": "New project",
   "architectural_notes": [],
-  "known_issues": [
-    "Customer booking link fare/distance calculator shows round-trip (250km) pricing when user selects/enters a one-way trip of 130km."
-  ],
-  "isFixRequest": true,
+  "known_issues": [],
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-fix-the-trip-total-calculator-so-that-when-the-user-selects-the-one-way-trip-type-and-enters-130-km-the-calculated-amount-is-based-on-one-way-pricing-and-one-way-minimum-coverage-if-applicable-rather-than-round-trip-minimum-coverage-250-km",
-      "title": "Fix the Trip Total Calculator so that when the user selects the one-way trip type and enters 130 km, the calculated amount is based on one-way pricing (and one-way minimum coverage if applicable) rather than round-trip minimum coverage (250 km).",
+      "id": "feature-update-the-profile-page-success-messaging-english-to-clearly-indicate-that-the-uploaded-display-picture-is-saved-to-the-user-profile-permanently-and-will-remain-available-next-time-they-sign-in",
+      "title": "Update the Profile page success messaging (English) to clearly indicate that the uploaded display picture is saved to the user profile permanently and will remain available next time they sign in.",
       "reqIds": [
-        "REQ-1"
+        "REQ-2"
       ],
       "version": 1
     }
   ],
-  "new_feature_requests": [],
-  "projectName": "Fix customer booking trip calculator using round-trip minimum distance for one-way trips",
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Make uploaded profile photo permanent (persist/store the profile photo so it remains saved for the user profile)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Persist each user’s profile (including the uploaded display picture reference) in stable storage so the profile photo remains saved after canister upgrades/redeploys.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Persist profile photo (display picture) permanently across upgrades",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

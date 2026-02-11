@@ -6,9 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useGetCallerUserProfile, useUploadDp, useInitializeCallerProfile } from '../hooks/useQueries';
 import { ExternalBlob } from '../backend';
-import { Upload, Loader2, CheckCircle2, AlertCircle, UserPlus } from 'lucide-react';
+import { Upload, Loader2, CheckCircle2, AlertCircle, UserPlus, Copy, ExternalLink, Share2, Check } from 'lucide-react';
 import { UserAvatar } from '../components/UserAvatar';
 import { mapBackendError } from '../utils/mapBackendError';
+import { getCanonicalUrl, copyCanonicalUrlToClipboard } from '../utils/canonicalUrl';
+import { isOwnerMode, isCustomerMode } from '../utils/appMode';
 
 export function ProfilePage() {
   const { data: userProfile, isLoading: profileLoading, isFetched } = useGetCallerUserProfile();
@@ -20,9 +22,18 @@ export function ProfilePage() {
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+  const [copiedPhotoUrl, setCopiedPhotoUrl] = useState(false);
+  const [copiedProfileLink, setCopiedProfileLink] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const hasNoProfile = isFetched && userProfile === null;
+  const hasDisplayPicture = userProfile?.dp !== undefined && userProfile?.dp !== null;
+  const photoDirectUrl = hasDisplayPicture ? userProfile.dp!.getDirectURL() : null;
+
+  const ownerMode = isOwnerMode();
+  const customerMode = isCustomerMode();
+  const currentMode = ownerMode ? 'owner' : 'customer';
+  const profilePageUrl = getCanonicalUrl(currentMode, 'profile');
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null);
@@ -118,214 +129,363 @@ export function ProfilePage() {
     setError(null);
     setSuccess(false);
     setUploadProgress(0);
+    
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
 
-  const isUploading = uploadDpMutation.isPending || initializeProfileMutation.isPending;
+  const handleCopyPhotoUrl = async () => {
+    if (!photoDirectUrl) return;
+    
+    try {
+      await navigator.clipboard.writeText(photoDirectUrl);
+      setCopiedPhotoUrl(true);
+      setTimeout(() => setCopiedPhotoUrl(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy photo URL:', err);
+    }
+  };
 
-  // Show loading state while profile is being fetched
-  if (profileLoading) {
-    return (
-      <div className="container mx-auto px-4 py-8 max-w-2xl">
-        <Card className="shadow-lg">
-          <CardContent className="py-12">
-            <div className="flex flex-col items-center justify-center gap-4">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">Loading profile...</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const handleOpenPhotoUrl = () => {
+    if (!photoDirectUrl) return;
+    window.open(photoDirectUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleSharePhotoUrl = async () => {
+    if (!photoDirectUrl) return;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My Profile Photo',
+          text: 'Check out my profile photo',
+          url: photoDirectUrl,
+        });
+      } catch (err) {
+        console.error('Failed to share photo URL:', err);
+      }
+    }
+  };
+
+  const handleCopyProfileLink = async () => {
+    const success = await copyCanonicalUrlToClipboard(currentMode, 'profile');
+    if (success) {
+      setCopiedProfileLink(true);
+      setTimeout(() => setCopiedProfileLink(false), 2000);
+    }
+  };
+
+  const handleShareProfileLink = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My Profile Page',
+          text: 'Visit my profile page',
+          url: profilePageUrl,
+        });
+      } catch (err) {
+        console.error('Failed to share profile link:', err);
+      }
+    }
+  };
+
+  const isUploading = uploadDpMutation.isPending || initializeProfileMutation.isPending;
+  const supportsWebShare = typeof navigator !== 'undefined' && !!navigator.share;
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
-      <Card className="shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">Profile Settings</CardTitle>
-          <CardDescription>
-            Update your display picture
-          </CardDescription>
-        </CardHeader>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-bold text-foreground">Profile Settings</h1>
+          <p className="text-muted-foreground">
+            Manage your display picture and profile information
+          </p>
+        </div>
 
-        <CardContent className="space-y-6">
-          {/* No Profile State */}
-          {hasNoProfile && (
-            <Alert className="border-amber-500/50 bg-amber-500/10">
-              <UserPlus className="h-4 w-4 text-amber-600" />
-              <AlertDescription className="text-amber-600">
-                Your profile needs to be initialized before you can upload a display picture.
-                Click "Initialize Profile" below to get started.
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {/* Current Display Picture */}
-          <div className="space-y-3">
-            <Label className="text-base font-semibold">Current Display Picture</Label>
-            <div className="flex items-center gap-4">
-              <UserAvatar className="h-24 w-24" />
-              <div className="flex-1">
-                <p className="text-sm text-muted-foreground">
-                  {userProfile?.name || 'User'}
-                </p>
-                {userProfile?.dp ? (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Display picture set
-                  </p>
-                ) : (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Using default placeholder
-                  </p>
-                )}
+        {/* No Profile Initialization Card */}
+        {hasNoProfile && (
+          <Card className="border-primary/20 bg-primary/5">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="rounded-full bg-primary/10 p-3">
+                  <UserPlus className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <CardTitle>Welcome! Set Up Your Profile</CardTitle>
+                  <CardDescription>
+                    Initialize your profile to start uploading your display picture
+                  </CardDescription>
+                </div>
               </div>
-            </div>
-          </div>
-
-          {/* Initialize Profile Button (only shown when no profile) */}
-          {hasNoProfile && !selectedFile && (
-            <div className="flex justify-center py-4">
+            </CardHeader>
+            <CardContent>
               <Button
                 onClick={handleInitializeProfile}
                 disabled={initializeProfileMutation.isPending}
-                size="lg"
-                className="min-w-[200px]"
+                className="w-full"
               >
                 {initializeProfileMutation.isPending ? (
                   <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Initializing...
                   </>
                 ) : (
                   <>
-                    <UserPlus className="mr-2 h-5 w-5" />
+                    <UserPlus className="mr-2 h-4 w-4" />
                     Initialize Profile
                   </>
                 )}
               </Button>
-            </div>
-          )}
+            </CardContent>
+          </Card>
+        )}
 
-          {/* Upload New Picture */}
-          <div className="space-y-3">
-            <Label htmlFor="dp-upload" className="text-base font-semibold">
-              Upload New Display Picture
-            </Label>
-            <div className="space-y-4">
-              <Input
-                ref={fileInputRef}
-                id="dp-upload"
-                type="file"
-                accept="image/png,image/jpeg,image/jpg"
-                onChange={handleFileSelect}
-                disabled={isUploading}
-                className="cursor-pointer"
-              />
-              <p className="text-xs text-muted-foreground">
-                Accepted formats: PNG, JPEG (max 5MB)
+        {/* Current Display Picture */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Current Display Picture</CardTitle>
+            <CardDescription>
+              This is how your profile picture appears across the app
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center space-y-4">
+            <UserAvatar className="h-32 w-32" />
+            {!hasDisplayPicture && (
+              <p className="text-sm text-muted-foreground text-center">
+                No display picture set. Upload one below to personalize your profile.
               </p>
-            </div>
-          </div>
+            )}
+          </CardContent>
+        </Card>
 
-          {/* Preview */}
-          {previewUrl && (
-            <div className="space-y-3">
-              <Label className="text-base font-semibold">Preview</Label>
-              <div className="flex justify-center">
-                <div className="relative">
-                  <img
-                    src={previewUrl}
-                    alt="Preview"
-                    className="h-32 w-32 rounded-full object-cover border-4 border-border"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Upload Progress */}
-          {isUploading && uploadProgress > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Uploading...</span>
-                <span className="font-medium">{uploadProgress}%</span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
-                <div
-                  className="bg-primary h-full transition-all duration-300"
-                  style={{ width: `${uploadProgress}%` }}
+        {/* Share Profile Photo URL */}
+        {hasDisplayPicture && photoDirectUrl && (
+          <Card className="border-primary/20 bg-primary/5">
+            <CardHeader>
+              <CardTitle>Share Your Profile Photo</CardTitle>
+              <CardDescription>
+                Direct link to your profile photo that you can share with others
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="photo-url">Photo URL</Label>
+                <Input
+                  id="photo-url"
+                  value={photoDirectUrl}
+                  readOnly
+                  className="font-mono text-sm"
                 />
               </div>
-            </div>
-          )}
-
-          {/* Success Message */}
-          {success && (
-            <Alert className="border-green-500/50 bg-green-500/10">
-              <CheckCircle2 className="h-4 w-4 text-green-600" />
-              <AlertDescription className="text-green-600">
-                Display picture updated successfully!
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {/* Error Message */}
-          {error && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-
-          {/* Action Buttons */}
-          <div className="flex gap-3 pt-2">
-            {selectedFile ? (
-              <>
+              <div className="flex flex-wrap gap-2">
                 <Button
-                  onClick={handleUpload}
-                  disabled={isUploading}
-                  className="flex-1"
-                  size="lg"
+                  onClick={handleCopyPhotoUrl}
+                  variant={copiedPhotoUrl ? 'secondary' : 'default'}
+                  size="sm"
+                  className="flex-1 min-w-[120px]"
                 >
-                  {isUploading ? (
+                  {copiedPhotoUrl ? (
                     <>
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      {hasNoProfile ? 'Initializing & Uploading...' : 'Uploading...'}
+                      <Check className="mr-2 h-4 w-4" />
+                      Copied!
                     </>
                   ) : (
                     <>
-                      <Upload className="mr-2 h-5 w-5" />
-                      Upload Picture
+                      <Copy className="mr-2 h-4 w-4" />
+                      Copy Link
                     </>
                   )}
                 </Button>
                 <Button
-                  onClick={handleCancel}
-                  disabled={isUploading}
+                  onClick={handleOpenPhotoUrl}
                   variant="outline"
-                  size="lg"
+                  size="sm"
+                  className="flex-1 min-w-[120px]"
                 >
-                  Cancel
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  Open
                 </Button>
-              </>
-            ) : (
+                {supportsWebShare && (
+                  <Button
+                    onClick={handleSharePhotoUrl}
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 min-w-[120px]"
+                  >
+                    <Share2 className="mr-2 h-4 w-4" />
+                    Share
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Share Profile Page Link */}
+        <Card className="border-accent/20 bg-accent/5">
+          <CardHeader>
+            <CardTitle>Share Your Profile Page</CardTitle>
+            <CardDescription>
+              Direct link to this profile page that you can share with others
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="profile-url">Profile Page URL</Label>
+              <Input
+                id="profile-url"
+                value={profilePageUrl}
+                readOnly
+                className="font-mono text-sm"
+              />
+            </div>
+            <div className="flex flex-wrap gap-2">
               <Button
-                onClick={() => fileInputRef.current?.click()}
-                variant="outline"
-                className="w-full"
-                size="lg"
-                disabled={hasNoProfile}
+                onClick={handleCopyProfileLink}
+                variant={copiedProfileLink ? 'secondary' : 'default'}
+                size="sm"
+                className="flex-1 min-w-[120px]"
               >
-                <Upload className="mr-2 h-5 w-5" />
-                Choose Picture
+                {copiedProfileLink ? (
+                  <>
+                    <Check className="mr-2 h-4 w-4" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="mr-2 h-4 w-4" />
+                    Copy Link
+                  </>
+                )}
               </Button>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+              {supportsWebShare && (
+                <Button
+                  onClick={handleShareProfileLink}
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 min-w-[120px]"
+                >
+                  <Share2 className="mr-2 h-4 w-4" />
+                  Share
+                </Button>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Upload New Display Picture */}
+        {!hasNoProfile && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Upload New Display Picture</CardTitle>
+              <CardDescription>
+                Choose a new image to update your profile picture (PNG or JPEG, max 5MB)
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* File Input */}
+              <div className="space-y-2">
+                <Label htmlFor="file-upload">Select Image</Label>
+                <Input
+                  id="file-upload"
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/jpg"
+                  onChange={handleFileSelect}
+                  disabled={isUploading}
+                  className="cursor-pointer"
+                />
+              </div>
+
+              {/* Preview */}
+              {previewUrl && (
+                <div className="space-y-2">
+                  <Label>Preview</Label>
+                  <div className="flex justify-center">
+                    <img
+                      src={previewUrl}
+                      alt="Preview"
+                      className="h-32 w-32 rounded-full object-cover border-4 border-primary/20"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Upload Progress */}
+              {isUploading && uploadProgress > 0 && (
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Uploading...</span>
+                    <span className="font-medium text-primary">{uploadProgress}%</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+                    <div
+                      className="bg-primary h-full transition-all duration-300 ease-out"
+                      style={{ width: `${uploadProgress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Error Alert */}
+              {error && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+
+              {/* Success Alert */}
+              {success && (
+                <Alert className="border-green-500/50 bg-green-500/10">
+                  <CheckCircle2 className="h-4 w-4 text-green-600" />
+                  <AlertDescription className="text-green-600">
+                    Display picture saved permanently to your profile! It will be available every time you sign in.
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleUpload}
+                  disabled={!selectedFile || isUploading}
+                  className="flex-1"
+                >
+                  {isUploading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="mr-2 h-4 w-4" />
+                      Upload
+                    </>
+                  )}
+                </Button>
+                {selectedFile && !isUploading && (
+                  <Button onClick={handleCancel} variant="outline">
+                    Cancel
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* No Display Picture Notice for Share Section */}
+        {!hasDisplayPicture && !hasNoProfile && (
+          <Alert>
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              Upload a display picture to enable photo sharing features.
+            </AlertDescription>
+          </Alert>
+        )}
+      </div>
     </div>
   );
 }

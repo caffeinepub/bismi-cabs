@@ -1,11 +1,10 @@
 # Specification
 
 ## Summary
-**Goal:** Correct the Trip Total Calculator so one-way trips use one-way minimum coverage/rates (not round-trip minimum coverage) when calculating totals.
+**Goal:** Ensure each user’s uploaded profile photo (display picture) remains permanently available across app reloads and backend canister upgrades, and clearly communicate this in the Profile UI.
 
 **Planned changes:**
-- Update `TripTotalCalculator` calculation logic to apply `MINIMUM_COVERAGE.oneWay` (and corresponding one-way rate/driver allowance) when Trip Type is "One-way drop".
-- Ensure round trips continue to use `MINIMUM_COVERAGE.roundTrip` (and corresponding round-trip rate/driver allowance) with no cross-mixing between trip types.
-- Make trip type switching immediately refresh the displayed/calculated rate, allowance, and billable distance consistently (frontend-only change).
+- Persist user profile data (including the uploaded display picture reference) in stable storage on the backend so it survives canister upgrades/redeploys.
+- Update the Profile page’s post-upload success message (English) to explicitly state the display picture is saved permanently and will be available next time the user signs in.
 
-**User-visible outcome:** When selecting "One-way drop" and entering 130 km, the calculator shows a total based on one-way pricing/minimum coverage; switching between one-way and round trip updates the total and inputs consistently.
+**User-visible outcome:** After uploading a display picture, users continue to see the same photo after reloading the app and even after backend upgrades; the Profile page confirms the photo is saved permanently.
