@@ -1,0 +1,101 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Booking lead submission and leads list UI with authenticated navigation",
+  "requirements": [
+    {
+      "id": "REQ-8",
+      "summary": "Add an authenticated Booking Form page to submit booking leads with validation and success confirmation.",
+      "acceptanceCriteria": [
+        "When not authenticated, the Booking Form page prompts the user to sign in and prevents submission.",
+        "Form validates required fields (name, phone, pickup, drop, pickup date/time) before submitting.",
+        "On successful submit, the user sees a clear success confirmation and the form resets (or offers to create another booking)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/BookingFormPage.tsx",
+          "operation": "create",
+          "description": "Create the Booking Form page UI with inputs for customer name, phone, pickup location, drop location, pickup date/time, and notes; gate submission behind Internet Identity authentication; show inline validation, submit loading state, and a clear success confirmation with a reset option. Use shadcn-ui components (e.g., Card, Button, Input, Textarea) to keep styling consistent—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the Booking Form page into app navigation so it can be reached from within the app and respects authentication gating."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Add an authenticated Leads page that fetches and displays booking leads in a readable list/table with loading and error states.",
+      "acceptanceCriteria": [
+        "When not authenticated, the Leads page prompts the user to sign in and does not show lead data.",
+        "When authenticated, the page fetches leads from the backend and renders them in a readable list/table.",
+        "The UI includes loading and error states for the leads query."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/LeadsPage.tsx",
+          "operation": "create",
+          "description": "Create the Leads page UI that displays all captured fields for each lead in a clear table/list view, including loading and error states and an explicit sign-in prompt when unauthenticated. Use shadcn-ui components (e.g., Card, Button, Table) for a consistent, mobile-friendly layout—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the Leads page into app navigation so it can be reached from within the app and is protected from unauthenticated access."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Update app navigation to access Login, Booking Form, and Leads pages with mobile-friendly UX and accessible logout.",
+      "acceptanceCriteria": [
+        "Users can navigate between Login, Booking Form, and Leads without manual URL editing.",
+        "Logout remains accessible and returns the app to an unauthenticated state where protected pages are blocked.",
+        "Navigation works on small screens (as shown in the uploaded mobile screenshot context)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AppShell.tsx",
+          "operation": "create",
+          "description": "Add an app shell layout providing a mobile-friendly header/bottom navigation that exposes Login, Booking Form, and Leads, and includes a Logout action that also clears React Query cache. Use shadcn-ui components (e.g., Button) for consistent interactions—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Replace the single-page render with in-app navigation (e.g., lightweight internal route state) that renders LoginPage, BookingFormPage, and LeadsPage inside AppShell and blocks protected pages when not authenticated."
+        },
+        {
+          "path": "frontend/src/pages/LoginPage.tsx",
+          "operation": "modify",
+          "description": "Update the Login page to provide an obvious post-login path to Booking Form and Leads (e.g., buttons that trigger navigation via props/callback) while keeping existing login/logout behavior and English UI text. Use shadcn-ui components already imported where applicable—verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Extend React Query with authenticated queries/mutations for creating and listing booking leads using the existing useActor hook.",
+      "acceptanceCriteria": [
+        "A React Query mutation exists for submitting a booking lead and uses the backend create method.",
+        "A React Query query exists for fetching leads and uses the backend list method.",
+        "After successful create, the leads list query is invalidated/refetched so the new lead appears on the Leads page."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Extend the existing React Query hooks module to include: (1) a leads list query backed by the authenticated actor's getBookingLeads, and (2) a create-lead mutation backed by createBookingLead, with proper enabled/disabled behavior based on actor availability and invalidation/refetch of the leads list after successful creation."
+        },
+        {
+          "path": "frontend/src/pages/BookingFormPage.tsx",
+          "operation": "modify",
+          "description": "Connect the Booking Form submission to the new React Query mutation hook, handle mutation loading/error/success states, and ensure successful submit triggers query invalidation so Leads updates. Use shadcn-ui components for consistent feedback UI—verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/LeadsPage.tsx",
+          "operation": "modify",
+          "description": "Connect the Leads page to the new React Query leads list hook, and render explicit loading and error states driven by the query. Use shadcn-ui components for consistent presentation—verify the component's usage instructions before implementing."
+        }
+      ]
+    }
+  ]
+}

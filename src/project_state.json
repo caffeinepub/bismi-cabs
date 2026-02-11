@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 7,
+  "summary": "Website project for BISMI CABS, now expanding beyond the initial login page to include a customer booking form and an admin leads/customer details page.",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-add-a-dedicated-login-page-for-the-bismi-cabs-website-that-uses-internet-identity-no-username-password-as-the-authentication-method",
+      "title": "Add a dedicated login page for the BISMI CABS website that uses Internet Identity (no username/password) as the authentication method.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-the-login-ui-content-for-bismi-cabs-on-the-login-page-including-app-name-bismi-cabs-the-contact-number-9500344749-and-space-for-a-brand-logo",
+      "title": "Implement the login UI content for BISMI CABS on the login page, including: app name 'BISMI CABS', the contact number '9500344749', and space for a brand logo.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-coherent-cab-service-appropriate-visual-theme-across-the-login-page-colors-typography-layout-using-a-distinct-style-that-aligns-with-the-bismi-cabs-branding",
+      "title": "Apply a coherent, cab-service-appropriate visual theme across the login page (colors, typography, layout) using a distinct style that aligns with the BISMI CABS branding.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-use-the-provided-uploaded-images-as-the-basis-for-web-ready-brand-assets-by-producing-cleaned-cropped-logo-images-and-placing-them-as-static-files-under-frontend-public-assets-generated-then-render-them-on-the-login-page",
+      "title": "Use the provided uploaded images as the basis for web-ready brand assets by producing cleaned/cropped logo images and placing them as static files under frontend/public/assets/generated, then render them on the login page.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-booking-form-page-in-the-frontend-that-allows-an-authenticated-user-to-submit-a-booking-lead-with-inputs-for-customer-name-customer-phone-pickup-location-drop-location-pickup-date-time-and-notes",
+      "title": "Add a Booking Form page in the frontend that allows an authenticated user to submit a booking/lead with inputs for: customer name, customer phone, pickup location, drop location, pickup date/time, and notes.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-leads-page-customer-details-leads-in-the-frontend-that-lists-submitted-booking-leads-in-a-clear-table-list-view-and-supports-basic-viewing-of-all-captured-fields-per-lead",
+      "title": "Add a Leads page (customer details & leads) in the frontend that lists submitted booking leads in a clear table/list view and supports basic viewing of all captured fields per lead.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-app-navigation-so-users-can-access-login-booking-form-and-leads-pages-from-within-the-app-mobile-friendly-after-successful-login-provide-an-obvious-path-to-open-the-booking-form-and-leads-pages",
+      "title": "Update the app navigation so users can access Login, Booking Form, and Leads pages from within the app (mobile-friendly). After successful login, provide an obvious path to open the Booking Form and Leads pages.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-existing-react-query-setup-with-queries-mutations-for-creating-leads-and-listing-leads-reusing-the-authenticated-actor-from-the-existing-useactor-hook",
+      "title": "Extend the existing React Query setup with queries/mutations for creating leads and listing leads, reusing the authenticated actor from the existing useActor hook.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Create a login page for the BISMI CABS website (user authentication entry point).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add a minimal backend endpoint to confirm authentication by returning the caller’s Principal (used by the frontend to show the logged-in identity state).",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Add a customer booking form page to collect lead details (e.g., name, phone, pickup/drop, date/time, notes).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Add a leads/customer details page (admin view) to list and review submitted bookings/leads.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Implement backend storage and APIs to save booking form submissions and retrieve them for the leads/admin page.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Add backend data model and persistent storage for customer booking leads, including fields: leadId, customerName, customerPhone, pickupLocation, dropLocation, pickupDateTime (text), notes (optional), createdAt (timestamp), and createdBy (caller Principal).",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Implement backend APIs to (1) create a new booking lead and (2) list booking leads for display on the leads page.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "BISMI CABS",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

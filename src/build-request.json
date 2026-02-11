@@ -1,0 +1,135 @@
+{
+  "kind": "build_request",
+  "title": "Add booking form and leads page with backend lead storage",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-6",
+      "text": "Add backend data model and persistent storage for customer booking leads, including fields: leadId, customerName, customerPhone, pickupLocation, dropLocation, pickupDateTime (text), notes (optional), createdAt (timestamp), and createdBy (caller Principal).",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-8"
+        ],
+        "quotes": [
+          "Create booking form and leads page"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Leads are stored persistently in canister stable state and remain after canister upgrade/redeploy.",
+        "Each stored lead includes all specified fields and a unique leadId.",
+        "createdBy is set to the caller principal for each newly created lead."
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Implement backend APIs to (1) create a new booking lead and (2) list booking leads for display on the leads page.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-6",
+          "msg-8"
+        ],
+        "quotes": [
+          "Where i see my costmer details & leed",
+          "Create booking form and leads page"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A non-query update method exists to create/save a lead and returns the created lead (or leadId).",
+        "A query method exists to retrieve a list of leads suitable for an admin/leads list UI.",
+        "Backend methods reject anonymous callers (must be logged in via Internet Identity)."
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Add a Booking Form page in the frontend that allows an authenticated user to submit a booking/lead with inputs for: customer name, customer phone, pickup location, drop location, pickup date/time, and notes.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-8"
+        ],
+        "quotes": [
+          "Create booking form and leads page"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When not authenticated, the Booking Form page prompts the user to sign in and prevents submission.",
+        "Form validates required fields (name, phone, pickup, drop, pickup date/time) before submitting.",
+        "On successful submit, the user sees a clear success confirmation and the form resets (or offers to create another booking)."
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Add a Leads page (customer details & leads) in the frontend that lists submitted booking leads in a clear table/list view and supports basic viewing of all captured fields per lead.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6",
+          "msg-8"
+        ],
+        "quotes": [
+          "Where i see my costmer details & leed",
+          "Create booking form and leads page"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When not authenticated, the Leads page prompts the user to sign in and does not show lead data.",
+        "When authenticated, the page fetches leads from the backend and renders them in a readable list/table.",
+        "The UI includes loading and error states for the leads query."
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Update the app navigation so users can access Login, Booking Form, and Leads pages from within the app (mobile-friendly). After successful login, provide an obvious path to open the Booking Form and Leads pages.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-8"
+        ],
+        "quotes": [
+          "Create booking form and leads page"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Users can navigate between Login, Booking Form, and Leads without manual URL editing.",
+        "Logout remains accessible and returns the app to an unauthenticated state where protected pages are blocked.",
+        "Navigation works on small screens (as shown in the uploaded mobile screenshot context)."
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Extend the existing React Query setup with queries/mutations for creating leads and listing leads, reusing the authenticated actor from the existing useActor hook.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-8"
+        ],
+        "quotes": [
+          "Create booking form and leads page"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A React Query mutation exists for submitting a booking lead and uses the backend create method.",
+        "A React Query query exists for fetching leads and uses the backend list method.",
+        "After successful create, the leads list query is invalidated/refetched so the new lead appears on the Leads page."
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must remain a single Motoko actor in backend/main.mo; do not introduce additional backend services.",
+    "Do not edit files under frontend/src/components/ui (compose them as-is).",
+    "Do not edit immutable paths listed in SYSTEM_CONTEXT (frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, and frontend/src/components/ui).",
+    "Use English for all user-facing UI text."
+  ],
+  "nonGoals": [
+    "Adding third-party authentication methods (only Internet Identity).",
+    "Payments, pricing, or ride dispatch features.",
+    "Real-time updates (no websockets).",
+    "SMS/WhatsApp/email notifications."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

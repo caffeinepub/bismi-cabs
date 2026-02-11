@@ -1,0 +1,21 @@
+{
+  "backend/main.mo": "Canister with access‑controlled user profiles and CRUD for booking leads using Map storage.",
+  "feature_evidence.json": "Feature evidence report mapping features to related frontend files, components, and test IDs.",
+  "frontend-file-summaries.txt": "Prewritten summaries describing the purpose of various frontend source files.",
+  "frontend/index.css": "Tailwind base styles defining OKLCH color tokens and light/dark theme variables.",
+  "frontend/index.html": "HTML root document loading the React app entry at /src/main.tsx.",
+  "frontend/src/App.tsx": "Root React component handling simple page routing based on authentication.",
+  "frontend/src/components/AppShell.tsx": "Layout wrapper with header, logout, and mobile/desktop navigation for app pages.",
+  "frontend/src/components/BrandLogo.tsx": "Component rendering square or wide logo variants from static assets.",
+  "frontend/src/hooks/useActor.ts": "Hook creating an authenticated or anonymous backend actor and refreshing dependent queries.",
+  "frontend/src/hooks/useInternetIdentity.ts": "Internet Identity auth provider and hook managing login, stored identities, and logout.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for fetching and creating booking leads via the backend actor.",
+  "frontend/src/index.css": "Defines Tailwind layers and extensive OKLCH color variables for light and dark themes, applying global styles and base typography.",
+  "frontend/src/main.tsx": "Bootstraps the React app with React Query and Internet Identity providers and loads global styles.",
+  "frontend/src/pages/BookingFormPage.tsx": "Implements an authenticated booking form with validation, Internet Identity login prompts, and lead submission handling.",
+  "frontend/src/pages/LeadsPage.tsx": "Displays booking leads with authentication checks, loading/error states, and formatted lead data in table or card views.",
+  "frontend/src/pages/LoginPage.tsx": "Renders a login screen using Internet Identity with navigation options and authenticated identity display.",
+  "frontend/src/utils/urlParams.ts": "Provides utilities for reading, persisting, and clearing URL parameters and session storage values.",
+  "frontend/tailwind.config.js": "Configures Tailwind theme extensions including OKLCH variable-based colors, typography, animations, and container settings.",
+  "project_state.json": "Contains metadata about the project state, completed features, and requirements for the BISMI CABS website. Tracks implemented functionality such as login, branding, booking form, leads page, and navigation updates."
+}

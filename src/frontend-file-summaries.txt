@@ -1,0 +1,11 @@
+{
+  "frontend/src/App.tsx": "Main application component with page routing state that renders LoginPage, BookingFormPage, or LeadsPage inside AppShell based on authentication and current page selection.",
+  "frontend/src/pages/LoginPage.tsx": "Login page with Internet Identity authentication that displays the principal directly from identity and shows post-login navigation buttons to Booking Form and Leads pages when authenticated.",
+  "frontend/src/components/BrandLogo.tsx": "Reusable brand logo component that renders either the square or wide logo variant from static assets with responsive sizing.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for listing booking leads and creating new booking leads with automatic cache invalidation.",
+  "frontend/src/index.css": "Global styles with OKLCH color system defining a warm cab-service theme (bold red primary, amber/yellow accents) for both light and dark modes, avoiding generic blue/purple aesthetics.",
+  "frontend/tailwind.config.js": "Tailwind configuration extended with custom fonts (Inter, Outfit) and maintaining the OKLCH color token system for the BISMI CABS brand theme.",
+  "frontend/src/components/AppShell.tsx": "App shell layout providing a sticky header with branding and logout, plus mobile bottom navigation and desktop navigation buttons for Login, Booking, and Leads pages.",
+  "frontend/src/pages/BookingFormPage.tsx": "Booking form page with validated inputs for customer name, phone, pickup/drop locations, pickup date/time, and notes; shows success confirmation and requires authentication.",
+  "frontend/src/pages/LeadsPage.tsx": "Leads list page displaying all booking leads in a responsive table (desktop) or card layout (mobile) with loading, error, and empty states; requires authentication."
+}
