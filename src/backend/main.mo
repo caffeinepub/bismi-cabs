@@ -5,10 +5,15 @@ import Time "mo:core/Time";
 import Principal "mo:core/Principal";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import MixinStorage "blob-storage/Mixin";
+import Storage "blob-storage/Storage";
+
+
 
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
+  include MixinStorage();
 
   var nextId = 0;
 
@@ -30,6 +35,17 @@ actor {
 
   let leads = Map.empty<Nat, BookingLead>();
   let userProfiles = Map.empty<Principal, UserProfile>();
+
+  // Rate Card type
+  type RateCard = {
+    file : Storage.ExternalBlob;
+    uploadedBy : Principal;
+    uploadedAt : Time.Time;
+    originalFileName : Text;
+    contentType : Text;
+  };
+
+  var latestRateCard : ?RateCard = null;
 
   // User profile management
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
@@ -85,5 +101,27 @@ actor {
     };
 
     leads.values().toArray();
+  };
+
+  // Rate Card Management
+  public shared ({ caller }) func uploadRateCard(file : Storage.ExternalBlob, originalFileName : Text, contentType : Text) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can upload rate cards");
+    };
+
+    let newRateCard : RateCard = {
+      file;
+      uploadedBy = caller;
+      uploadedAt = Time.now();
+      originalFileName;
+      contentType;
+    };
+
+    latestRateCard := ?newRateCard;
+  };
+
+  public query func getLatestRateCard() : async ?RateCard {
+    // No authorization check - rate cards are public information for customers
+    latestRateCard;
   };
 };

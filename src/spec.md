@@ -1,13 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Add an authenticated booking form and an admin-style leads page, backed by persistent lead storage in the backend.
+**Goal:** Expand the Rate Card pricing display to include Local Transfer and Rental Rate Card tables while keeping the existing One-way/Round-trip pricing and Additional Information visible and unchanged in meaning.
 
 **Planned changes:**
-- Add a backend lead data model with persistent (stable) storage for booking leads: leadId, customerName, customerPhone, pickupLocation, dropLocation, pickupDateTime (text), notes (optional), createdAt, createdBy (caller principal).
-- Implement backend methods to create a lead (update) and list leads (query), rejecting anonymous callers (Internet Identity required).
-- Add a mobile-friendly Booking Form page that is protected by authentication, validates required fields, submits to the backend, and shows success feedback with reset/ready-for-next behavior.
-- Add a protected Leads page that fetches and displays all stored leads in a readable table/list, including loading and error states.
-- Update in-app navigation so users can reach Login, Booking Form, and Leads pages without manual URL edits, keeping Logout accessible.
+- Update `frontend/src/components/RatePricingSection.tsx` to add a new **Local Transfer** pricing section with vehicle-wise minimum distance, base price, and extra per-km pricing (English labels).
+- Update `frontend/src/components/RatePricingSection.tsx` to add a new **Rental Rate Card** pricing section with vehicle-wise package (5 hr / 50 km), base price, extra per-hour, and extra per-km pricing (English labels).
+- Ensure the new sections follow the existing responsive layout patterns (mobile/desktop) without horizontal overflow and do not affect the existing Rate Card download/upload UI on `frontend/src/pages/RateCardPage.tsx`.
 
-**User-visible outcome:** After signing in, users can submit booking details via a Booking Form and view saved customer leads on a Leads page; leads persist across backend upgrades and are not visible when signed out.
+**User-visible outcome:** On the Rate Card page, users can view the existing current per-km pricing and additional info as before, plus clearly labeled Local Transfer and Rental Rate Card pricing tables with the provided values, usable on both mobile and desktop.

@@ -3,9 +3,10 @@ import { useInternetIdentity } from './hooks/useInternetIdentity';
 import { LoginPage } from './pages/LoginPage';
 import { BookingFormPage } from './pages/BookingFormPage';
 import { LeadsPage } from './pages/LeadsPage';
+import { RateCardPage } from './pages/RateCardPage';
 import { AppShell } from './components/AppShell';
 
-type Page = 'login' | 'booking' | 'leads';
+type Page = 'login' | 'booking' | 'leads' | 'rateCard';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>('login');
@@ -24,6 +25,8 @@ function App() {
         return <BookingFormPage />;
       case 'leads':
         return <LeadsPage />;
+      case 'rateCard':
+        return <RateCardPage />;
       case 'login':
       default:
         return <LoginPage onNavigate={setCurrentPage} />;

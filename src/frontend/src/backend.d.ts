@@ -7,6 +7,14 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
+export class ExternalBlob {
+    getBytes(): Promise<Uint8Array<ArrayBuffer>>;
+    getDirectURL(): string;
+    static fromURL(url: string): ExternalBlob;
+    static fromBytes(blob: Uint8Array<ArrayBuffer>): ExternalBlob;
+    withUploadProgress(onProgress: (percentage: number) => void): ExternalBlob;
+}
+export type Time = bigint;
 export interface BookingLead {
     customerName: string;
     customerPhone: string;
@@ -18,7 +26,13 @@ export interface BookingLead {
     pickupDateTime: string;
     pickupLocation: string;
 }
-export type Time = bigint;
+export interface RateCard {
+    originalFileName: string;
+    contentType: string;
+    file: ExternalBlob;
+    uploadedAt: Time;
+    uploadedBy: Principal;
+}
 export interface UserProfile {
     name: string;
 }
@@ -33,7 +47,9 @@ export interface backendInterface {
     getBookingLeads(): Promise<Array<BookingLead>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getLatestRateCard(): Promise<RateCard | null>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    uploadRateCard(file: ExternalBlob, originalFileName: string, contentType: string): Promise<void>;
 }

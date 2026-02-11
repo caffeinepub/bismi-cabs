@@ -1,132 +1,37 @@
 {
   "kind": "build_request",
-  "title": "Add booking form and leads page with backend lead storage",
+  "title": "Add Local Transfer and Rental pricing tables to the Rate Card pricing section",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-6",
-      "text": "Add backend data model and persistent storage for customer booking leads, including fields: leadId, customerName, customerPhone, pickupLocation, dropLocation, pickupDateTime (text), notes (optional), createdAt (timestamp), and createdBy (caller Principal).",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-8"
-        ],
-        "quotes": [
-          "Create booking form and leads page"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Leads are stored persistently in canister stable state and remain after canister upgrade/redeploy.",
-        "Each stored lead includes all specified fields and a unique leadId.",
-        "createdBy is set to the caller principal for each newly created lead."
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Implement backend APIs to (1) create a new booking lead and (2) list booking leads for display on the leads page.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-6",
-          "msg-8"
-        ],
-        "quotes": [
-          "Where i see my costmer details & leed",
-          "Create booking form and leads page"
-        ]
-      },
-      "acceptanceCriteria": [
-        "A non-query update method exists to create/save a lead and returns the created lead (or leadId).",
-        "A query method exists to retrieve a list of leads suitable for an admin/leads list UI.",
-        "Backend methods reject anonymous callers (must be logged in via Internet Identity)."
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "text": "Add a Booking Form page in the frontend that allows an authenticated user to submit a booking/lead with inputs for: customer name, customer phone, pickup location, drop location, pickup date/time, and notes.",
+      "id": "REQ-19",
+      "text": "Update the Rate Card on-page pricing display (frontend/src/components/RatePricingSection.tsx) to include two additional pricing sections, using English labels and the exact values provided by the user: (1) a \"Local Transfer\" section with minimum distance and base price plus extra per-km price for SEDAN, SUV, Innova, and CRYSTA; and (2) a \"Rental Rate Card\" section with package duration+distance and base price plus extra per-hour and extra per-km prices for SEDAN, SUV, Innova, and CRYSTA. Keep the existing per-km One-way/Round-trip pricing and the existing \"Additional Information\" (driver allowance, minimum coverage) visible as well.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-8"
+          "msg-4"
         ],
         "quotes": [
-          "Create booking form and leads page"
+          "SEDAN  Local transfer minimum 20km 600rs\nExtra km 25\n\nSUV local transfer minimum 20km 900rs\nExtra km 38rs\n\nInnova local transfer minimum 20km 1000rs\nExtra km 40rs\n\nCRYSTA minimum 50km 2250rs\nExtra km 45rs\n\n\nRental rate card \n\nSEDAN 5 hr 50km 1500rs extra hr 280rs extra km 25rs\n\nSuv 5 hr 50km 1900rs extra hr 400 extra km 38rs\n\nInnova 5 hr 50 km 2200 extra hr 400 extra km40\n\nCRYSTA 5 hr 50km 2500rs extra km45 extra hr 450rs"
         ]
       },
       "acceptanceCriteria": [
-        "When not authenticated, the Booking Form page prompts the user to sign in and prevents submission.",
-        "Form validates required fields (name, phone, pickup, drop, pickup date/time) before submitting.",
-        "On successful submit, the user sees a clear success confirmation and the form resets (or offers to create another booking)."
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "text": "Add a Leads page (customer details & leads) in the frontend that lists submitted booking leads in a clear table/list view and supports basic viewing of all captured fields per lead.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-6",
-          "msg-8"
-        ],
-        "quotes": [
-          "Where i see my costmer details & leed",
-          "Create booking form and leads page"
-        ]
-      },
-      "acceptanceCriteria": [
-        "When not authenticated, the Leads page prompts the user to sign in and does not show lead data.",
-        "When authenticated, the page fetches leads from the backend and renders them in a readable list/table.",
-        "The UI includes loading and error states for the leads query."
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "text": "Update the app navigation so users can access Login, Booking Form, and Leads pages from within the app (mobile-friendly). After successful login, provide an obvious path to open the Booking Form and Leads pages.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-8"
-        ],
-        "quotes": [
-          "Create booking form and leads page"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Users can navigate between Login, Booking Form, and Leads without manual URL editing.",
-        "Logout remains accessible and returns the app to an unauthenticated state where protected pages are blocked.",
-        "Navigation works on small screens (as shown in the uploaded mobile screenshot context)."
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "text": "Extend the existing React Query setup with queries/mutations for creating leads and listing leads, reusing the authenticated actor from the existing useActor hook.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-8"
-        ],
-        "quotes": [
-          "Create booking form and leads page"
-        ]
-      },
-      "acceptanceCriteria": [
-        "A React Query mutation exists for submitting a booking lead and uses the backend create method.",
-        "A React Query query exists for fetching leads and uses the backend list method.",
-        "After successful create, the leads list query is invalidated/refetched so the new lead appears on the Leads page."
+        "RatePricingSection shows the existing \"Current Pricing\" (one-way/round-trip per-km) and \"Additional Information\" sections unchanged in meaning (same values as currently displayed).",
+        "A new \"Local Transfer\" section is displayed with these exact values: SEDAN minimum 20 km = ₹600, extra per km = ₹25; SUV minimum 20 km = ₹900, extra per km = ₹38; Innova minimum 20 km = ₹1000, extra per km = ₹40; CRYSTA minimum 50 km = ₹2250, extra per km = ₹45.",
+        "A new \"Rental Rate Card\" section is displayed with these exact values: SEDAN 5 hr / 50 km = ₹1500, extra hour = ₹280, extra per km = ₹25; SUV 5 hr / 50 km = ₹1900, extra hour = ₹400, extra per km = ₹38; Innova 5 hr / 50 km = ₹2200, extra hour = ₹400, extra per km = ₹40; CRYSTA 5 hr / 50 km = ₹2500, extra hour = ₹450, extra per km = ₹45.",
+        "All new user-facing text for the added sections is in English (e.g., \"Local Transfer\", \"Minimum distance\", \"Extra per km\", \"Rental Rate Card\", \"Package\", \"Extra per hour\").",
+        "The added sections are responsive like the existing pricing UI (usable on both mobile and desktop layouts without horizontal overflow).",
+        "The Rate Card document download/upload UI on frontend/src/pages/RateCardPage.tsx remains functional and visible below the pricing section (no regressions to downloading the current file or admin upload flow)."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in backend/main.mo; do not introduce additional backend services.",
-    "Do not edit files under frontend/src/components/ui (compose them as-is).",
-    "Do not edit immutable paths listed in SYSTEM_CONTEXT (frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, and frontend/src/components/ui).",
-    "Use English for all user-facing UI text."
+    "Do not edit any files under frontend/src/components/ui or any other frontend immutablePaths listed in SYSTEM_CONTEXT; compose existing UI components instead.",
+    "Keep the backend single-actor architecture unchanged; no backend changes are required for this pricing-display-only update."
   ],
   "nonGoals": [
-    "Adding third-party authentication methods (only Internet Identity).",
-    "Payments, pricing, or ride dispatch features.",
-    "Real-time updates (no websockets).",
-    "SMS/WhatsApp/email notifications."
+    "Do not change backend rate card storage, upload/download APIs, or admin authorization logic.",
+    "Do not add new pages or navigation items; only update the pricing display content/layout on the existing Rate Card page."
   ],
   "imageRequirements": {
     "required": [],

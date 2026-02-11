@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { BookingLead } from '../backend';
+import type { BookingLead, RateCard, ExternalBlob } from '../backend';
 
 export function useGetBookingLeads() {
   const { actor, isFetching } = useActor();
@@ -41,5 +41,50 @@ export function useCreateBookingLead() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookingLeads'] });
     },
+  });
+}
+
+export function useGetLatestRateCard() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<RateCard | null>({
+    queryKey: ['latestRateCard'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not initialized');
+      return actor.getLatestRateCard();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useUploadRateCard() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: {
+      file: ExternalBlob;
+      originalFileName: string;
+      contentType: string;
+    }) => {
+      if (!actor) throw new Error('Actor not initialized');
+      return actor.uploadRateCard(data.file, data.originalFileName, data.contentType);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['latestRateCard'] });
+    },
+  });
+}
+
+export function useIsCallerAdmin() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<boolean>({
+    queryKey: ['isCallerAdmin'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not initialized');
+      return actor.isCallerAdmin();
+    },
+    enabled: !!actor && !isFetching,
   });
 }

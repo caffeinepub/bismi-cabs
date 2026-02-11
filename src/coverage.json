@@ -1,108 +1,34 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T08:32:53.234Z",
+  "generatedAt": "2026-02-11T09:19:37.853Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 6,
-    "implemented": 4,
+    "total": 1,
+    "implemented": 1,
     "items": [
       {
-        "id": "REQ-10",
-        "summary": "Update the app navigation so users can access Login, Booking Form, and Leads pages from within the app (mobile-friendly). After successful login, provide an obvious path to open the Booking Form and Leads pages.",
+        "id": "REQ-19",
+        "summary": "Update the Rate Card on-page pricing display (frontend/src/components/RatePricingSection.tsx) to include two additional pricing sections, using English labels and the exact values provided by the user: (1) a \"Local Transfer\" section with minimum distance and base price plus extra per-km price for SEDAN, SUV, Innova, and CRYSTA; and (2) a \"Rental Rate Card\" section with package duration+distance and base price plus extra per-hour and extra per-km prices for SEDAN, SUV, Innova, and CRYSTA. Keep the existing per-km One-way/Round-trip pricing and the existing \"Additional Information\" (driver allowance, minimum coverage) visible as well.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/AppShell.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/pages/LoginPage.tsx"
+          "frontend/src/components/RatePricingSection.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/AppShell.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/pages/LoginPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-11",
-        "summary": "Extend the existing React Query setup with queries/mutations for creating leads and listing leads, reusing the authenticated actor from the existing useActor hook.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/pages/BookingFormPage.tsx",
-          "frontend/src/pages/LeadsPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/pages/BookingFormPage.tsx",
-          "frontend/src/pages/LeadsPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Add backend data model and persistent storage for customer booking leads, including fields: leadId, customerName, customerPhone, pickupLocation, dropLocation, pickupDateTime (text), notes (optional), createdAt (timestamp), and createdBy (caller Principal).",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-7",
-        "summary": "Implement backend APIs to (1) create a new booking lead and (2) list booking leads for display on the leads page.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-8",
-        "summary": "Add a Booking Form page in the frontend that allows an authenticated user to submit a booking/lead with inputs for: customer name, customer phone, pickup location, drop location, pickup date/time, and notes.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/BookingFormPage.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/BookingFormPage.tsx",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-9",
-        "summary": "Add a Leads page (customer details & leads) in the frontend that lists submitted booking leads in a clear table/list view and supports basic viewing of all captured fields per lead.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/LeadsPage.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/LeadsPage.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/components/RatePricingSection.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/authorization/MixinAuthorization.mo",
-    "backend/authorization/access-control.mo",
-    "backend/main.mo",
     "build-request.json",
-    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/AppShell.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useActor.ts",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/BookingFormPage.tsx",
-    "frontend/src/pages/LeadsPage.tsx",
-    "frontend/src/pages/LoginPage.tsx",
-    "frontend/src/utils/urlParams.ts",
+    "frontend/src/components/RatePricingSection.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

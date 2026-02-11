@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
-  "summary": "Website project for BISMI CABS, now expanding beyond the initial login page to include a customer booking form and an admin leads/customer details page.",
+  "projectStateVersion": 15,
+  "summary": "Website project for BISMI CABS, now expanding beyond the initial login page to include a customer booking form, an admin leads/customer details page, and a rate card/price list upload feature for the customer app.",
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
@@ -69,6 +69,62 @@
         "REQ-11"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-the-branding-tagline-text-since-2014-to-the-bismi-cabs-ui-so-it-appears-consistently-on-the-login-home-experience",
+      "title": "Add the branding tagline text \"Since 2014\" to the BISMI CABS UI so it appears consistently on the login/home experience.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-authenticated-frontend-page-for-managing-and-viewing-the-rate-card-price-list-allow-an-authorized-user-to-upload-replace-the-rate-card-and-allow-authenticated-users-to-view-download-the-latest-uploaded-rate-card",
+      "title": "Add a new authenticated frontend page for managing and viewing the rate card/price list: allow an authorized user to upload/replace the rate card, and allow authenticated users to view/download the latest uploaded rate card.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-app-navigation-and-client-side-routing-to-include-the-new-rate-card-page-following-the-existing-pattern-used-for-login-booking-leads-navigation",
+      "title": "Extend app navigation and client-side routing to include the new Rate Card page, following the existing pattern used for Login/Booking/Leads navigation.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-existing-react-query-hook-layer-to-support-fetching-latest-rate-card-metadata-downloading-latest-rate-card-bytes-and-uploading-a-new-rate-card-reusing-the-authenticated-actor-from-the-existing-useactor-hook",
+      "title": "Extend the existing React Query hook layer to support: fetching latest rate card metadata, downloading latest rate card bytes, and uploading a new rate card, reusing the authenticated actor from the existing useActor hook.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-rate-card-page-ui-to-display-the-latest-bismi-cabs-pricing-details-as-on-page-text-table-using-the-exact-values-provided-by-the-user-sedan-one-way-drop-per-km-14-rs-sedan-round-trip-per-km-12-rs-suv-one-way-drop-per-km-19-rs-suv-round-trip-per-km-18-rs-innova-one-way-drop-per-km-20-rs-innova-round-trip-per-km-19-rs-crysta-one-way-drop-per-km-22-rs-crysta-round-trip-per-km-20-rs-driver-allowance-one-way-400-rs-driver-allowance-round-trip-500-rs-minimum-coverage-one-way-drop-130-km-minimum-coverage-round-trip-250-km",
+      "title": "Update the Rate Card page UI to display the latest BISMI CABS pricing details (as on-page text/table) using the exact values provided by the user: Sedan one-way drop per km: 14 Rs; Sedan round trip per km: 12 Rs; SUV one-way drop per km: 19 Rs; SUV round trip per km: 18 Rs; Innova one-way drop per km: 20 Rs; Innova round trip per km: 19 Rs; Crysta one-way drop per km: 22 Rs; Crysta round trip per km: 20 Rs; Driver allowance (one-way): 400 Rs; Driver allowance (round trip): 500 Rs; Minimum coverage (one-way drop): 130 km; Minimum coverage (round trip): 250 km.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-keep-the-existing-rate-card-file-view-download-and-admin-upload-functionality-intact-on-the-rate-card-page-and-ensure-the-newly-displayed-pricing-section-does-not-block-downloading-the-currently-uploaded-rate-card-file-if-present-or-uploading-a-replacement-file-for-admins",
+      "title": "Keep the existing rate card file view/download and admin upload functionality intact on the Rate Card page, and ensure the newly displayed pricing section does not block downloading the currently uploaded rate card file (if present) or uploading a replacement file (for admins).",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-rate-card-on-page-pricing-display-frontend-src-components-ratepricingsection-tsx-to-include-two-additional-pricing-sections-using-english-labels-and-the-exact-values-provided-by-the-user-1-a-local-transfer-section-with-minimum-distance-and-base-price-plus-extra-per-km-price-for-sedan-suv-innova-and-crysta-and-2-a-rental-rate-card-section-with-package-duration-distance-and-base-price-plus-extra-per-hour-and-extra-per-km-prices-for-sedan-suv-innova-and-crysta-keep-the-existing-per-km-one-way-round-trip-pricing-and-the-existing-additional-information-driver-allowance-minimum-coverage-visible-as-well",
+      "title": "Update the Rate Card on-page pricing display (frontend/src/components/RatePricingSection.tsx) to include two additional pricing sections, using English labels and the exact values provided by the user: (1) a \"Local Transfer\" section with minimum distance and base price plus extra per-km price for SEDAN, SUV, Innova, and CRYSTA; and (2) a \"Rental Rate Card\" section with package duration+distance and base price plus extra per-hour and extra per-km prices for SEDAN, SUV, Innova, and CRYSTA. Keep the existing per-km One-way/Round-trip pricing and the existing \"Additional Information\" (driver allowance, minimum coverage) visible as well.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -118,6 +174,38 @@
       "reqIds": [
         "REQ-7"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Add/ensure the branding text \"Since 2014\" appears correctly on the BISMI CABS website (likely on the login/landing UI).",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Add a rate card / price list upload feature (upload and manage pricing list for the customer app).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Add backend data model and APIs to upload and retrieve the latest BISMI CABS rate card / price list for the customer app, storing the uploaded file bytes and basic metadata (original filename, content type, uploadedAt timestamp, uploadedBy Principal).",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Update the BISMI CABS rate card with the latest prices: Sedan (oneway 14/km, round 12/km), SUV (oneway 19/km, round 18/km), Innova (oneway 20/km, round 19/km), Crysta (oneway 22/km, round 20/km), driver allowance (oneway 400, round 500), minimum coverage (oneway 130 km, round 250 km).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Update the Rate Card pricing display to include the newly provided 'Local transfer' and 'Rental rate card' prices (minimum km/packages, base price, extra km, extra hour) for Sedan/SUV/Innova/Crysta.",
+      "reqIds": [],
       "status": "pending"
     }
   ],

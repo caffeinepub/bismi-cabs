@@ -2,9 +2,9 @@ import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useQueryClient } from '@tanstack/react-query';
 import { BrandLogo } from './BrandLogo';
 import { Button } from '@/components/ui/button';
-import { Phone, LogOut, FileText, ClipboardList, Home } from 'lucide-react';
+import { Phone, LogOut, FileText, ClipboardList, Home, DollarSign } from 'lucide-react';
 
-type Page = 'login' | 'booking' | 'leads';
+type Page = 'login' | 'booking' | 'leads' | 'rateCard';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -69,7 +69,7 @@ export function AppShell({ children, currentPage, onNavigate }: AppShellProps) {
             <div className="flex sm:hidden justify-around py-2">
               <button
                 onClick={() => onNavigate('login')}
-                className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-colors ${
+                className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors ${
                   currentPage === 'login'
                     ? 'text-primary bg-primary/10'
                     : 'text-muted-foreground hover:text-foreground'
@@ -81,7 +81,7 @@ export function AppShell({ children, currentPage, onNavigate }: AppShellProps) {
 
               <button
                 onClick={() => onNavigate('booking')}
-                className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-colors ${
+                className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors ${
                   currentPage === 'booking'
                     ? 'text-primary bg-primary/10'
                     : 'text-muted-foreground hover:text-foreground'
@@ -93,7 +93,7 @@ export function AppShell({ children, currentPage, onNavigate }: AppShellProps) {
 
               <button
                 onClick={() => onNavigate('leads')}
-                className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-colors ${
+                className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors ${
                   currentPage === 'leads'
                     ? 'text-primary bg-primary/10'
                     : 'text-muted-foreground hover:text-foreground'
@@ -101,6 +101,18 @@ export function AppShell({ children, currentPage, onNavigate }: AppShellProps) {
               >
                 <ClipboardList className="h-5 w-5" />
                 <span className="text-xs font-medium">Leads</span>
+              </button>
+
+              <button
+                onClick={() => onNavigate('rateCard')}
+                className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors ${
+                  currentPage === 'rateCard'
+                    ? 'text-primary bg-primary/10'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <DollarSign className="h-5 w-5" />
+                <span className="text-xs font-medium">Rates</span>
               </button>
             </div>
 
@@ -129,6 +141,14 @@ export function AppShell({ children, currentPage, onNavigate }: AppShellProps) {
               >
                 <ClipboardList className="h-4 w-4 mr-2" />
                 View Leads
+              </Button>
+              <Button
+                onClick={() => onNavigate('rateCard')}
+                variant={currentPage === 'rateCard' ? 'default' : 'ghost'}
+                size="sm"
+              >
+                <DollarSign className="h-4 w-4 mr-2" />
+                Rate Card
               </Button>
             </div>
           </div>

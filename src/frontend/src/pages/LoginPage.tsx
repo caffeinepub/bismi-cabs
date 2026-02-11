@@ -2,10 +2,10 @@ import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { BrandLogo } from '@/components/BrandLogo';
-import { LogIn, Loader2, Phone, FileText, ClipboardList } from 'lucide-react';
+import { LogIn, Loader2, Phone, FileText, ClipboardList, DollarSign } from 'lucide-react';
 
 interface LoginPageProps {
-  onNavigate: (page: 'login' | 'booking' | 'leads') => void;
+  onNavigate: (page: 'login' | 'booking' | 'leads' | 'rateCard') => void;
 }
 
 export function LoginPage({ onNavigate }: LoginPageProps) {
@@ -49,6 +49,11 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
                 <Button onClick={() => onNavigate('leads')} variant="outline" className="w-full" size="lg">
                   <ClipboardList className="mr-2 h-5 w-5" />
                   View All Leads
+                </Button>
+
+                <Button onClick={() => onNavigate('rateCard')} variant="outline" className="w-full" size="lg">
+                  <DollarSign className="mr-2 h-5 w-5" />
+                  View Rate Card
                 </Button>
               </div>
             </div>
