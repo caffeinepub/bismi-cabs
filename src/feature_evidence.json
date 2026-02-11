@@ -2,11 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-allow-customer-mode-users-to-open-the-booking-page-directly-from-a-shared-customer-link-even-when-they-are-not-logged-in-no-forced-redirect-to-the-login-page",
-      "featureTitle": "Allow customer-mode users to open the Booking page directly from a shared customer link even when they are not logged in (no forced redirect to the Login page).",
+      "featureId": "feature-fix-the-trip-total-calculator-so-that-when-the-user-selects-the-one-way-trip-type-and-enters-130-km-the-calculated-amount-is-based-on-one-way-pricing-and-one-way-minimum-coverage-if-applicable-rather-than-round-trip-minimum-coverage-250-km",
+      "featureTitle": "Fix the Trip Total Calculator so that when the user selects the one-way trip type and enters 130 km, the calculated amount is based on one-way pricing (and one-way minimum coverage if applicable) rather than round-trip minimum coverage (250 km).",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/utils/urlParams.ts"
+        "frontend/src/components/TripTotalCalculator.tsx",
+        "frontend/src/utils/rates.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -19,49 +19,6 @@
       ],
       "testIds": [
         "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-the-customer-share-link-generation-so-it-produces-a-url-that-deep-links-into-the-booking-flow-e-g-includes-a-parameter-that-the-app-uses-to-open-the-booking-page-on-load",
-      "featureTitle": "Update the customer share link generation so it produces a URL that deep-links into the Booking flow (e.g., includes a parameter that the app uses to open the booking page on load).",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/ShareAppLinkCard.tsx",
-        "frontend/src/utils/canonicalUrl.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-make-the-booking-form-usable-without-internet-identity-login-in-customer-mode-including-enabling-submission-when-the-visitor-is-anonymous",
-      "featureTitle": "Make the booking form usable without Internet Identity login in customer mode, including enabling submission when the visitor is anonymous.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/BookingFormPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
       ],
       "confidence": "high"
     }

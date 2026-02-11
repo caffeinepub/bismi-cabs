@@ -3,43 +3,22 @@
   "projectStateVersion": 3,
   "summary": "New project",
   "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
+  "known_issues": [
+    "Customer booking link fare/distance calculator shows round-trip (250km) pricing when user selects/enters a one-way trip of 130km."
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-allow-customer-mode-users-to-open-the-booking-page-directly-from-a-shared-customer-link-even-when-they-are-not-logged-in-no-forced-redirect-to-the-login-page",
-      "title": "Allow customer-mode users to open the Booking page directly from a shared customer link even when they are not logged in (no forced redirect to the Login page).",
+      "id": "feature-fix-the-trip-total-calculator-so-that-when-the-user-selects-the-one-way-trip-type-and-enters-130-km-the-calculated-amount-is-based-on-one-way-pricing-and-one-way-minimum-coverage-if-applicable-rather-than-round-trip-minimum-coverage-250-km",
+      "title": "Fix the Trip Total Calculator so that when the user selects the one-way trip type and enters 130 km, the calculated amount is based on one-way pricing (and one-way minimum coverage if applicable) rather than round-trip minimum coverage (250 km).",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
-    },
-    {
-      "id": "feature-update-the-customer-share-link-generation-so-it-produces-a-url-that-deep-links-into-the-booking-flow-e-g-includes-a-parameter-that-the-app-uses-to-open-the-booking-page-on-load",
-      "title": "Update the customer share link generation so it produces a URL that deep-links into the Booking flow (e.g., includes a parameter that the app uses to open the booking page on load).",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-make-the-booking-form-usable-without-internet-identity-login-in-customer-mode-including-enabling-submission-when-the-visitor-is-anonymous",
-      "title": "Make the booking form usable without Internet Identity login in customer mode, including enabling submission when the visitor is anonymous.",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "version": 1
     }
   ],
-  "new_feature_requests": [
-    {
-      "id": "AR-1",
-      "summary": "Provide a customer-facing booking link that opens the booking flow directly without requiring login",
-      "reqIds": [],
-      "status": "pending"
-    }
-  ],
-  "projectName": "Customer share link opens booking directly without requiring login",
+  "new_feature_requests": [],
+  "projectName": "Fix customer booking trip calculator using round-trip minimum distance for one-way trips",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

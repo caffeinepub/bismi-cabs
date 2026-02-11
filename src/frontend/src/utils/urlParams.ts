@@ -208,10 +208,11 @@ export function getSecretParameter(paramName: string): string | null {
 }
 
 /**
- * Checks if a deep-link parameter is present in the URL
- * Used to determine initial page navigation for customer links
+ * Gets a deep-link parameter for customer booking flow
+ * Used to navigate directly to specific pages (e.g., booking page)
+ * Works with both regular query params and hash-based routing
  *
- * @param paramName - The name of the deep-link parameter (e.g., 'page')
+ * @param paramName - The name of the deep-link parameter
  * @returns The parameter value if found, null otherwise
  */
 export function getDeepLinkParameter(paramName: string): string | null {

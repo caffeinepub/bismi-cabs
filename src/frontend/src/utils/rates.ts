@@ -62,3 +62,14 @@ export function getHourlyRate(vehicle: VehicleType): number {
   const rate = HOURLY_RATES.find((r) => r.vehicle === vehicle);
   return rate ? rate.perHour : 0;
 }
+
+// Helper function to get minimum coverage for trip type
+export function getMinimumCoverage(tripType: TripType): number {
+  return tripType === 'oneWay' ? MINIMUM_COVERAGE.oneWay : MINIMUM_COVERAGE.roundTrip;
+}
+
+// Helper function to calculate billable distance (applies minimum coverage)
+export function getBillableDistance(actualDistance: number, tripType: TripType): number {
+  const minimumCoverage = getMinimumCoverage(tripType);
+  return Math.max(actualDistance, minimumCoverage);
+}

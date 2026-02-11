@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Let customers open a shared customer link directly into the Booking flow and submit a booking without logging in, while keeping owner-mode login requirements unchanged.
+**Goal:** Correct the Trip Total Calculator so one-way trips use one-way minimum coverage/rates (not round-trip minimum coverage) when calculating totals.
 
 **Planned changes:**
-- Update customer share link generation in `frontend/src/components/ShareAppLinkCard.tsx` to produce a deep-link URL that opens the Booking page on first load (and ensure Copy/Open actions use it).
-- Adjust frontend routing/boot logic so visiting a customer share link in a logged-out session shows the Booking page instead of redirecting to Login.
-- Make the Booking form available for anonymous visitors in customer mode (no authentication-blocking screen) and allow “Create Booking” to submit while logged out.
-- Update backend authorization so anonymous/guest callers can create booking leads via `createBookingLead`, while keeping owner/admin access protections in place for viewing leads (e.g., `getBookingLeads` remains protected).
+- Update `TripTotalCalculator` calculation logic to apply `MINIMUM_COVERAGE.oneWay` (and corresponding one-way rate/driver allowance) when Trip Type is "One-way drop".
+- Ensure round trips continue to use `MINIMUM_COVERAGE.roundTrip` (and corresponding round-trip rate/driver allowance) with no cross-mixing between trip types.
+- Make trip type switching immediately refresh the displayed/calculated rate, allowance, and billable distance consistently (frontend-only change).
 
-**User-visible outcome:** A customer can click a shared customer link in a fresh browser session, land directly on the Booking page, and submit a booking successfully without signing in; owner links still require Internet Identity login when logged out.
+**User-visible outcome:** When selecting "One-way drop" and entering 130 km, the calculator shows a total based on one-way pricing/minimum coverage; switching between one-way and round trip updates the total and inputs consistently.
