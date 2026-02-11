@@ -8,8 +8,6 @@ import AccessControl "authorization/access-control";
 import MixinStorage "blob-storage/Mixin";
 import Storage "blob-storage/Storage";
 
-
-
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -36,7 +34,6 @@ actor {
   let leads = Map.empty<Nat, BookingLead>();
   let userProfiles = Map.empty<Principal, UserProfile>();
 
-  // Rate Card type
   type RateCard = {
     file : Storage.ExternalBlob;
     uploadedBy : Principal;
@@ -47,7 +44,6 @@ actor {
 
   var latestRateCard : ?RateCard = null;
 
-  // User profile management
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can access profiles");
@@ -69,8 +65,14 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  // Create a new booking lead
-  public shared ({ caller }) func createBookingLead(customerName : Text, customerPhone : Text, pickupLocation : Text, dropLocation : Text, pickupDateTime : Text, notes : ?Text) : async BookingLead {
+  public shared ({ caller }) func createBookingLead(
+    customerName : Text,
+    customerPhone : Text,
+    pickupLocation : Text,
+    dropLocation : Text,
+    pickupDateTime : Text,
+    notes : ?Text,
+  ) : async BookingLead {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can create booking leads");
     };
@@ -94,7 +96,6 @@ actor {
     newLead;
   };
 
-  // Get all booking leads
   public query ({ caller }) func getBookingLeads() : async [BookingLead] {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view leads");
@@ -103,8 +104,11 @@ actor {
     leads.values().toArray();
   };
 
-  // Rate Card Management
-  public shared ({ caller }) func uploadRateCard(file : Storage.ExternalBlob, originalFileName : Text, contentType : Text) : async () {
+  public shared ({ caller }) func uploadRateCard(
+    file : Storage.ExternalBlob,
+    originalFileName : Text,
+    contentType : Text,
+  ) : async () {
     if (not (AccessControl.isAdmin(accessControlState, caller))) {
       Runtime.trap("Unauthorized: Only admins can upload rate cards");
     };
@@ -120,8 +124,10 @@ actor {
     latestRateCard := ?newRateCard;
   };
 
-  public query func getLatestRateCard() : async ?RateCard {
-    // No authorization check - rate cards are public information for customers
+  public query ({ caller }) func getLatestRateCard() : async ?RateCard {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view rate cards");
+    };
     latestRateCard;
   };
 };

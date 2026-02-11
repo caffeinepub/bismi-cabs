@@ -2,10 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-rate-card-on-page-pricing-display-frontend-src-components-ratepricingsection-tsx-to-include-two-additional-pricing-sections-using-english-labels-and-the-exact-values-provided-by-the-user-1-a-local-transfer-section-with-minimum-distance-and-base-price-plus-extra-per-km-price-for-sedan-suv-innova-and-crysta-and-2-a-rental-rate-card-section-with-package-duration-distance-and-base-price-plus-extra-per-hour-and-extra-per-km-prices-for-sedan-suv-innova-and-crysta-keep-the-existing-per-km-one-way-round-trip-pricing-and-the-existing-additional-information-driver-allowance-minimum-coverage-visible-as-well",
-      "featureTitle": "Update the Rate Card on-page pricing display (frontend/src/components/RatePricingSection.tsx) to include two additional pricing sections, using English labels and the exact values provided by the user: (1) a \"Local Transfer\" section with minimum distance and base price plus extra per-km price for SEDAN, SUV, Innova, and CRYSTA; and (2) a \"Rental Rate Card\" section with package duration+distance and base price plus extra per-hour and extra per-km prices for SEDAN, SUV, Innova, and CRYSTA. Keep the existing per-km One-way/Round-trip pricing and the existing \"Additional Information\" (driver allowance, minimum coverage) visible as well.",
+      "featureId": "feature-hide-all-ui-entry-points-to-the-leads-page-for-non-admin-users-so-that-customers-who-open-the-shared-website-link-only-see-new-booking-and-rate-card-navigation-actions",
+      "featureTitle": "Hide all UI entry points to the \"Leads\" page for non-admin users so that customers who open the shared website link only see \"New Booking\" and \"Rate Card\" navigation/actions.",
       "files": [
-        "frontend/src/components/RatePricingSection.tsx"
+        "frontend/src/components/AppShell.tsx",
+        "frontend/src/pages/LoginPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -17,7 +18,29 @@
         "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-19"
+        "REQ-22"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-prevent-non-admin-users-from-accessing-the-leads-page-even-if-they-manually-navigate-to-it-e-g-via-any-ui-state-or-deep-link-and-show-an-english-not-authorized-message-with-clear-buttons-to-go-to-new-booking-and-rate-card-instead",
+      "featureTitle": "Prevent non-admin users from accessing the Leads page even if they manually navigate to it (e.g., via any UI state or deep link), and show an English \"Not authorized\" message with clear buttons to go to \"New Booking\" and \"Rate Card\" instead.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/LeadsPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-23"
       ],
       "confidence": "high"
     }

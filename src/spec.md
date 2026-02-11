@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Expand the Rate Card pricing display to include Local Transfer and Rental Rate Card tables while keeping the existing One-way/Round-trip pricing and Additional Information visible and unchanged in meaning.
+**Goal:** Ensure customers (non-admin users) cannot see or access the Leads page, and only see New Booking and Rate Card actions/navigation.
 
 **Planned changes:**
-- Update `frontend/src/components/RatePricingSection.tsx` to add a new **Local Transfer** pricing section with vehicle-wise minimum distance, base price, and extra per-km pricing (English labels).
-- Update `frontend/src/components/RatePricingSection.tsx` to add a new **Rental Rate Card** pricing section with vehicle-wise package (5 hr / 50 km), base price, extra per-hour, and extra per-km pricing (English labels).
-- Ensure the new sections follow the existing responsive layout patterns (mobile/desktop) without horizontal overflow and do not affect the existing Rate Card download/upload UI on `frontend/src/pages/RateCardPage.tsx`.
+- Hide all UI entry points to the Leads page for non-admin users (mobile bottom nav Leads tab, desktop “View Leads” button, and authenticated home/login “View All Leads” button).
+- Add frontend route/page gating so non-admin users who navigate to the Leads page (including via direct URL/deep link) see a “Not authorized” message instead of lead data.
+- Provide “Not authorized” actions/buttons that take non-admin users to “New Booking” and “Rate Card”.
 
-**User-visible outcome:** On the Rate Card page, users can view the existing current per-km pricing and additional info as before, plus clearly labeled Local Transfer and Rental Rate Card pricing tables with the provided values, usable on both mobile and desktop.
+**User-visible outcome:** Customers opening the shared link will only see New Booking and Rate Card; if they try to access Leads directly, they’ll see a clear “Not authorized” page with buttons to go to New Booking or Rate Card, while admins still have full Leads access.

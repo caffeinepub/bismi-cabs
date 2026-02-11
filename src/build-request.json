@@ -1,40 +1,68 @@
 {
   "kind": "build_request",
-  "title": "Add Local Transfer and Rental pricing tables to the Rate Card pricing section",
+  "title": "Restrict Leads page visibility so customer shared link shows only New Booking and Rate Card",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-19",
-      "text": "Update the Rate Card on-page pricing display (frontend/src/components/RatePricingSection.tsx) to include two additional pricing sections, using English labels and the exact values provided by the user: (1) a \"Local Transfer\" section with minimum distance and base price plus extra per-km price for SEDAN, SUV, Innova, and CRYSTA; and (2) a \"Rental Rate Card\" section with package duration+distance and base price plus extra per-hour and extra per-km prices for SEDAN, SUV, Innova, and CRYSTA. Keep the existing per-km One-way/Round-trip pricing and the existing \"Additional Information\" (driver allowance, minimum coverage) visible as well.",
+      "id": "REQ-22",
+      "text": "Hide all UI entry points to the \"Leads\" page for non-admin users so that customers who open the shared website link only see \"New Booking\" and \"Rate Card\" navigation/actions.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "SEDAN  Local transfer minimum 20km 600rs\nExtra km 25\n\nSUV local transfer minimum 20km 900rs\nExtra km 38rs\n\nInnova local transfer minimum 20km 1000rs\nExtra km 40rs\n\nCRYSTA minimum 50km 2250rs\nExtra km 45rs\n\n\nRental rate card \n\nSEDAN 5 hr 50km 1500rs extra hr 280rs extra km 25rs\n\nSuv 5 hr 50km 1900rs extra hr 400 extra km 38rs\n\nInnova 5 hr 50 km 2200 extra hr 400 extra km40\n\nCRYSTA 5 hr 50km 2500rs extra km45 extra hr 450rs"
+          "I share to costmer link just open link just show new booking & rate card only don't show booking lead page ok booking lead page only for me ok"
         ]
       },
       "acceptanceCriteria": [
-        "RatePricingSection shows the existing \"Current Pricing\" (one-way/round-trip per-km) and \"Additional Information\" sections unchanged in meaning (same values as currently displayed).",
-        "A new \"Local Transfer\" section is displayed with these exact values: SEDAN minimum 20 km = ₹600, extra per km = ₹25; SUV minimum 20 km = ₹900, extra per km = ₹38; Innova minimum 20 km = ₹1000, extra per km = ₹40; CRYSTA minimum 50 km = ₹2250, extra per km = ₹45.",
-        "A new \"Rental Rate Card\" section is displayed with these exact values: SEDAN 5 hr / 50 km = ₹1500, extra hour = ₹280, extra per km = ₹25; SUV 5 hr / 50 km = ₹1900, extra hour = ₹400, extra per km = ₹38; Innova 5 hr / 50 km = ₹2200, extra hour = ₹400, extra per km = ₹40; CRYSTA 5 hr / 50 km = ₹2500, extra hour = ₹450, extra per km = ₹45.",
-        "All new user-facing text for the added sections is in English (e.g., \"Local Transfer\", \"Minimum distance\", \"Extra per km\", \"Rental Rate Card\", \"Package\", \"Extra per hour\").",
-        "The added sections are responsive like the existing pricing UI (usable on both mobile and desktop layouts without horizontal overflow).",
-        "The Rate Card document download/upload UI on frontend/src/pages/RateCardPage.tsx remains functional and visible below the pricing section (no regressions to downloading the current file or admin upload flow)."
+        "When a non-admin authenticated user views the app, the bottom navigation (mobile) does not show the \"Leads\" tab.",
+        "When a non-admin authenticated user views the app, the desktop navigation does not show the \"View Leads\" button.",
+        "When a non-admin authenticated user is on the Login/Home page while authenticated, the \"View All Leads\" button is not shown.",
+        "Admin users continue to see the Leads navigation/actions as before."
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "text": "Prevent non-admin users from accessing the Leads page even if they manually navigate to it (e.g., via any UI state or deep link), and show an English \"Not authorized\" message with clear buttons to go to \"New Booking\" and \"Rate Card\" instead.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "don't show booking lead page ok booking lead page only for me ok"
+        ]
+      },
+      "acceptanceCriteria": [
+        "If a non-admin user attempts to open the Leads page, the app does not display lead data and instead shows a \"Not authorized\" message in English.",
+        "The \"Not authorized\" state includes a button to navigate to \"New Booking\" and a button to navigate to \"Rate Card\".",
+        "Admin users can access the Leads page normally without seeing the \"Not authorized\" state."
       ]
     }
   ],
   "constraints": [
-    "Do not edit any files under frontend/src/components/ui or any other frontend immutablePaths listed in SYSTEM_CONTEXT; compose existing UI components instead.",
-    "Keep the backend single-actor architecture unchanged; no backend changes are required for this pricing-display-only update."
+    "Do not edit files under frontend/src/components/ui or any frontend immutablePaths listed in SYSTEM_CONTEXT.",
+    "Keep Internet Identity authentication as-is.",
+    "Do not change backend authorization logic unless required to implement the UI restriction (prefer frontend-only gating using the existing admin check hook)."
   ],
   "nonGoals": [
-    "Do not change backend rate card storage, upload/download APIs, or admin authorization logic.",
-    "Do not add new pages or navigation items; only update the pricing display content/layout on the existing Rate Card page."
+    "Implementing a new authentication system or username/password login.",
+    "Adding new pages beyond restricting access to the existing Leads page.",
+    "Changing booking creation flow or rate card upload/download behavior."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

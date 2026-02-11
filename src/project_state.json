@@ -1,9 +1,14 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 15,
-  "summary": "Website project for BISMI CABS, now expanding beyond the initial login page to include a customer booking form, an admin leads/customer details page, and a rate card/price list upload feature for the customer app.",
-  "architectural_notes": [],
-  "known_issues": [],
+  "projectStateVersion": 19,
+  "summary": "BISMI CABS website now includes customer-facing Booking and Rate Card pages, with the Leads/Booking Lead page restricted to admin/owner only (not visible to customers).",
+  "architectural_notes": [
+    "Production website is served via an ICP canister; the shareable URL may require the correct canisterId or a stable gateway mapping to avoid 'Canister ID Not Resolved'.",
+    "Add role-based access (or allowlist by Principal) so the Leads/Booking Leads page/route is hidden and blocked for non-admin users; customers should only see Booking and Rate Card pages when opening the shared link."
+  ],
+  "known_issues": [
+    "Users report the website link is not opening and shows 'Canister ID Not Resolved' (likely due to canister not deployed/expired or gateway resolution issue)."
+  ],
   "isFixRequest": false,
   "existing_features": [
     {
@@ -125,6 +130,38 @@
         "REQ-19"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-re-deploy-the-bismi-cabs-frontend-canister-so-the-website-is-reachable-again-and-no-longer-returns-the-gateway-error-canister-id-not-resolved-when-opened-by-users",
+      "title": "Re-deploy the BISMI CABS frontend canister so the website is reachable again and no longer returns the gateway error \"Canister ID Not Resolved\" when opened by users.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-after-re-deploying-provide-a-single-definitive-copy-pasteable-working-website-url-for-users-to-open-the-bismi-cabs-app",
+      "title": "After re-deploying, provide a single definitive, copy-pasteable working website URL for users to open the BISMI CABS app.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-hide-all-ui-entry-points-to-the-leads-page-for-non-admin-users-so-that-customers-who-open-the-shared-website-link-only-see-new-booking-and-rate-card-navigation-actions",
+      "title": "Hide all UI entry points to the \"Leads\" page for non-admin users so that customers who open the shared website link only see \"New Booking\" and \"Rate Card\" navigation/actions.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-prevent-non-admin-users-from-accessing-the-leads-page-even-if-they-manually-navigate-to-it-e-g-via-any-ui-state-or-deep-link-and-show-an-english-not-authorized-message-with-clear-buttons-to-go-to-new-booking-and-rate-card-instead",
+      "title": "Prevent non-admin users from accessing the Leads page even if they manually navigate to it (e.g., via any UI state or deep link), and show an English \"Not authorized\" message with clear buttons to go to \"New Booking\" and \"Rate Card\" instead.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -205,6 +242,18 @@
     {
       "id": "AR-14",
       "summary": "Update the Rate Card pricing display to include the newly provided 'Local transfer' and 'Rental rate card' prices (minimum km/packages, base price, extra km, extra hour) for Sedan/SUV/Innova/Crysta.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Re-deploy the BISMI CABS website frontend canister and provide a new working website link (current link shows 'Canister ID Not Resolved').",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Restrict the Booking Leads (admin) page so it is only accessible/visible to the owner/admin account; customer shared link should show only Booking Form and Rate Card pages.",
       "reqIds": [],
       "status": "pending"
     }

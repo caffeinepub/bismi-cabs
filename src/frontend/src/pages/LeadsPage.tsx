@@ -1,15 +1,20 @@
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useGetBookingLeads } from '../hooks/useQueries';
+import { useGetBookingLeads, useIsCallerAdmin } from '../hooks/useQueries';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, AlertCircle, LogIn, Phone, MapPin, Calendar, FileText } from 'lucide-react';
+import { Loader2, AlertCircle, LogIn, Phone, MapPin, Calendar, FileText, ShieldAlert, DollarSign } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-export function LeadsPage() {
+interface LeadsPageProps {
+  onNavigate?: (page: 'login' | 'booking' | 'leads' | 'rateCard') => void;
+}
+
+export function LeadsPage({ onNavigate }: LeadsPageProps) {
   const { identity, login, isLoggingIn } = useInternetIdentity();
-  const { data: leads, isLoading, isError, error } = useGetBookingLeads();
+  const { data: isAdmin, isLoading: isAdminLoading } = useIsCallerAdmin();
+  const { data: leads, isLoading, isError, error } = useGetBookingLeads(isAdmin === true);
 
   const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
 
@@ -64,6 +69,60 @@ export function LeadsPage() {
                   Sign in with Internet Identity
                 </>
               )}
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Show loading state while checking admin status
+  if (isAdminLoading) {
+    return (
+      <div className="flex items-center justify-center p-4 min-h-[calc(100vh-12rem)]">
+        <div className="flex items-center gap-3">
+          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+          <span className="text-muted-foreground">Checking permissions...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Show not authorized message for non-admin users
+  if (isAdmin === false) {
+    return (
+      <div className="flex items-center justify-center p-4 min-h-[calc(100vh-12rem)]">
+        <Card className="w-full max-w-md shadow-xl border-destructive/30">
+          <CardHeader className="text-center space-y-4">
+            <div className="flex justify-center">
+              <div className="rounded-full bg-destructive/10 p-4">
+                <ShieldAlert className="h-12 w-12 text-destructive" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <CardTitle className="text-2xl">Not Authorized</CardTitle>
+              <CardDescription>
+                You don't have permission to view booking leads. This page is only accessible to administrators.
+              </CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Button
+              onClick={() => onNavigate?.('booking')}
+              className="w-full"
+              size="lg"
+            >
+              <FileText className="mr-2 h-5 w-5" />
+              New Booking
+            </Button>
+            <Button
+              onClick={() => onNavigate?.('rateCard')}
+              variant="outline"
+              className="w-full"
+              size="lg"
+            >
+              <DollarSign className="mr-2 h-5 w-5" />
+              Rate Card
             </Button>
           </CardContent>
         </Card>
@@ -166,11 +225,11 @@ export function LeadsPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-16">ID</TableHead>
+                      <TableHead className="w-[80px]">Lead ID</TableHead>
                       <TableHead>Customer</TableHead>
                       <TableHead>Phone</TableHead>
-                      <TableHead>Pickup</TableHead>
-                      <TableHead>Drop</TableHead>
+                      <TableHead>Pickup Location</TableHead>
+                      <TableHead>Drop Location</TableHead>
                       <TableHead>Pickup Time</TableHead>
                       <TableHead>Notes</TableHead>
                       <TableHead>Created</TableHead>
@@ -179,16 +238,45 @@ export function LeadsPage() {
                   <TableBody>
                     {leads.map((lead) => (
                       <TableRow key={lead.leadId.toString()}>
-                        <TableCell className="font-mono text-xs">#{lead.leadId.toString()}</TableCell>
-                        <TableCell className="font-medium">{lead.customerName}</TableCell>
-                        <TableCell>{lead.customerPhone}</TableCell>
-                        <TableCell className="max-w-[200px] truncate">{lead.pickupLocation}</TableCell>
-                        <TableCell className="max-w-[200px] truncate">{lead.dropLocation}</TableCell>
-                        <TableCell className="whitespace-nowrap">
-                          {formatDateTime(lead.pickupDateTime)}
+                        <TableCell className="font-medium">
+                          <Badge variant="outline">#{lead.leadId.toString()}</Badge>
                         </TableCell>
-                        <TableCell className="max-w-[150px] truncate">
-                          {lead.notes || <span className="text-muted-foreground">—</span>}
+                        <TableCell className="font-medium">{lead.customerName}</TableCell>
+                        <TableCell>
+                          <a
+                            href={`tel:${lead.customerPhone}`}
+                            className="text-primary hover:underline flex items-center gap-1"
+                          >
+                            <Phone className="h-3 w-3" />
+                            {lead.customerPhone}
+                          </a>
+                        </TableCell>
+                        <TableCell className="max-w-[200px]">
+                          <div className="flex items-start gap-1">
+                            <MapPin className="h-3 w-3 text-primary mt-0.5 flex-shrink-0" />
+                            <span className="truncate">{lead.pickupLocation}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="max-w-[200px]">
+                          <div className="flex items-start gap-1">
+                            <MapPin className="h-3 w-3 text-destructive mt-0.5 flex-shrink-0" />
+                            <span className="truncate">{lead.dropLocation}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-3 w-3 text-accent" />
+                            {formatDateTime(lead.pickupDateTime)}
+                          </div>
+                        </TableCell>
+                        <TableCell className="max-w-[200px]">
+                          {lead.notes ? (
+                            <span className="text-sm text-muted-foreground truncate block">
+                              {lead.notes}
+                            </span>
+                          ) : (
+                            <span className="text-sm text-muted-foreground italic">No notes</span>
+                          )}
                         </TableCell>
                         <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
                           {formatTimestamp(lead.createdAt)}
@@ -197,10 +285,6 @@ export function LeadsPage() {
                     ))}
                   </TableBody>
                 </Table>
-              </div>
-
-              <div className="mt-4 text-sm text-muted-foreground text-center">
-                Total leads: {leads.length}
               </div>
             </>
           )}

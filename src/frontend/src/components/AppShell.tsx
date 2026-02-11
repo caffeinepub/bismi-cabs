@@ -2,7 +2,17 @@ import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useQueryClient } from '@tanstack/react-query';
 import { BrandLogo } from './BrandLogo';
 import { Button } from '@/components/ui/button';
-import { Phone, LogOut, FileText, ClipboardList, Home, DollarSign } from 'lucide-react';
+import { Phone, LogOut, FileText, ClipboardList, Home, DollarSign, Share2 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { ShareAppLinkCard } from './ShareAppLinkCard';
+import { useIsCallerAdmin } from '../hooks/useQueries';
 
 type Page = 'login' | 'booking' | 'leads' | 'rateCard';
 
@@ -15,6 +25,7 @@ interface AppShellProps {
 export function AppShell({ children, currentPage, onNavigate }: AppShellProps) {
   const { identity, clear } = useInternetIdentity();
   const queryClient = useQueryClient();
+  const { data: isAdmin, isLoading: isAdminLoading } = useIsCallerAdmin();
 
   const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
 
@@ -23,6 +34,9 @@ export function AppShell({ children, currentPage, onNavigate }: AppShellProps) {
     queryClient.clear();
     onNavigate('login');
   };
+
+  // Show leads navigation only for admins
+  const showLeadsNav = isAuthenticated && !isAdminLoading && isAdmin === true;
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-accent/5">
@@ -50,10 +64,30 @@ export function AppShell({ children, currentPage, onNavigate }: AppShellProps) {
             </a>
 
             {isAuthenticated && (
-              <Button onClick={handleLogout} variant="ghost" size="sm" className="ml-2">
-                <LogOut className="h-4 w-4 sm:mr-2" />
-                <span className="hidden sm:inline">Logout</span>
-              </Button>
+              <>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="sm" className="ml-2">
+                      <Share2 className="h-4 w-4 sm:mr-2" />
+                      <span className="hidden sm:inline">Share</span>
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Share Your Website</DialogTitle>
+                      <DialogDescription>
+                        Share this link with your customers so they can book rides
+                      </DialogDescription>
+                    </DialogHeader>
+                    <ShareAppLinkCard />
+                  </DialogContent>
+                </Dialog>
+
+                <Button onClick={handleLogout} variant="ghost" size="sm">
+                  <LogOut className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Logout</span>
+                </Button>
+              </>
             )}
           </div>
         </div>
@@ -91,17 +125,19 @@ export function AppShell({ children, currentPage, onNavigate }: AppShellProps) {
                 <span className="text-xs font-medium">Book</span>
               </button>
 
-              <button
-                onClick={() => onNavigate('leads')}
-                className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors ${
-                  currentPage === 'leads'
-                    ? 'text-primary bg-primary/10'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <ClipboardList className="h-5 w-5" />
-                <span className="text-xs font-medium">Leads</span>
-              </button>
+              {showLeadsNav && (
+                <button
+                  onClick={() => onNavigate('leads')}
+                  className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors ${
+                    currentPage === 'leads'
+                      ? 'text-primary bg-primary/10'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  <ClipboardList className="h-5 w-5" />
+                  <span className="text-xs font-medium">Leads</span>
+                </button>
+              )}
 
               <button
                 onClick={() => onNavigate('rateCard')}
@@ -134,14 +170,16 @@ export function AppShell({ children, currentPage, onNavigate }: AppShellProps) {
                 <FileText className="h-4 w-4 mr-2" />
                 New Booking
               </Button>
-              <Button
-                onClick={() => onNavigate('leads')}
-                variant={currentPage === 'leads' ? 'default' : 'ghost'}
-                size="sm"
-              >
-                <ClipboardList className="h-4 w-4 mr-2" />
-                View Leads
-              </Button>
+              {showLeadsNav && (
+                <Button
+                  onClick={() => onNavigate('leads')}
+                  variant={currentPage === 'leads' ? 'default' : 'ghost'}
+                  size="sm"
+                >
+                  <ClipboardList className="h-4 w-4 mr-2" />
+                  View Leads
+                </Button>
+              )}
               <Button
                 onClick={() => onNavigate('rateCard')}
                 variant={currentPage === 'rateCard' ? 'default' : 'ghost'}

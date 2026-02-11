@@ -1,24 +1,53 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add Local Transfer and Rental Rate Card sections to Rate Card pricing display",
+  "title": "Frontend-only admin gating for Leads navigation and access",
   "requirements": [
     {
-      "id": "REQ-19",
-      "summary": "Extend RatePricingSection to show new Local Transfer and Rental Rate Card pricing tables while keeping existing one-way/round-trip and Additional Information sections unchanged.",
+      "id": "REQ-22",
+      "summary": "Hide all UI entry points to the Leads page for non-admin users while keeping Leads visible for admins.",
       "acceptanceCriteria": [
-        "RatePricingSection shows the existing \"Current Pricing\" (one-way/round-trip per-km) and \"Additional Information\" sections unchanged in meaning (same values as currently displayed).",
-        "A new \"Local Transfer\" section is displayed with these exact values: SEDAN minimum 20 km = ₹600, extra per km = ₹25; SUV minimum 20 km = ₹900, extra per km = ₹38; Innova minimum 20 km = ₹1000, extra per km = ₹40; CRYSTA minimum 50 km = ₹2250, extra per km = ₹45.",
-        "A new \"Rental Rate Card\" section is displayed with these exact values: SEDAN 5 hr / 50 km = ₹1500, extra hour = ₹280, extra per km = ₹25; SUV 5 hr / 50 km = ₹1900, extra hour = ₹400, extra per km = ₹38; Innova 5 hr / 50 km = ₹2200, extra hour = ₹400, extra per km = ₹40; CRYSTA 5 hr / 50 km = ₹2500, extra hour = ₹450, extra per km = ₹45.",
-        "All new user-facing text for the added sections is in English (e.g., \"Local Transfer\", \"Minimum distance\", \"Extra per km\", \"Rental Rate Card\", \"Package\", \"Extra per hour\").",
-        "The added sections are responsive like the existing pricing UI (usable on both mobile and desktop layouts without horizontal overflow).",
-        "The Rate Card document download/upload UI on frontend/src/pages/RateCardPage.tsx remains functional and visible below the pricing section (no regressions to downloading the current file or admin upload flow)."
+        "When a non-admin authenticated user views the app, the bottom navigation (mobile) does not show the \"Leads\" tab.",
+        "When a non-admin authenticated user views the app, the desktop navigation does not show the \"View Leads\" button.",
+        "When a non-admin authenticated user is on the Login/Home page while authenticated, the \"View All Leads\" button is not shown.",
+        "Admin users continue to see the Leads navigation/actions as before."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/RatePricingSection.tsx",
+          "path": "frontend/src/components/AppShell.tsx",
           "operation": "modify",
-          "description": "Add two new pricing sections—\"Local Transfer\" and \"Rental Rate Card\"—rendered in the same responsive pattern as existing pricing: use existing shadcn-ui Card/Table building blocks already imported in this file to provide consistent table layout on desktop (with overflow-x-auto to prevent horizontal overflow) and stacked card/grid layout on mobile. Verify the component's usage instructions before implementing. Ensure the new sections display exactly the provided values (vehicle, minimum/package, base price, extra per km, extra per hour) with English labels, and keep the existing Current Pricing (one-way/round-trip per-km) and Additional Information values unchanged."
+          "description": "Conditionally render the mobile \"Leads\" tab and the desktop \"View Leads\" button only when the current user is an admin (use the authorization capability via the existing admin check hook, e.g., useIsCallerAdmin). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/LoginPage.tsx",
+          "operation": "modify",
+          "description": "Hide the authenticated \"View All Leads\" button for non-admin users by checking admin status (use the authorization capability via the existing admin check hook, e.g., useIsCallerAdmin). Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "summary": "Block non-admin access to the Leads page and show a Not authorized message with navigation buttons to New Booking and Rate Card.",
+      "acceptanceCriteria": [
+        "If a non-admin user attempts to open the Leads page, the app does not display lead data and instead shows a \"Not authorized\" message in English.",
+        "The \"Not authorized\" state includes a button to navigate to \"New Booking\" and a button to navigate to \"Rate Card\".",
+        "Admin users can access the Leads page normally without seeing the \"Not authorized\" state."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Update the booking leads query hook to support conditional fetching (e.g., accept an enabled flag/options) so the Leads data query can be disabled when the user is not an admin, preventing any lead data from loading for non-admins. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/LeadsPage.tsx",
+          "operation": "modify",
+          "description": "Add an admin gate using the existing admin check hook (authorization capability) and render an English \"Not authorized\" UI for non-admins that includes two clear buttons: one to navigate to \"New Booking\" and one to navigate to \"Rate Card\". Ensure lead data fetching is disabled unless admin. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire navigation into the Leads page by passing the existing onNavigate/setCurrentPage handler into LeadsPage so the unauthorized state buttons can route users to \"booking\" (New Booking) and \"rateCard\" (Rate Card) without adding new pages."
         }
       ]
     }

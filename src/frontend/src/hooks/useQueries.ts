@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
 import type { BookingLead, RateCard, ExternalBlob } from '../backend';
 
-export function useGetBookingLeads() {
+export function useGetBookingLeads(enabled: boolean = true) {
   const { actor, isFetching } = useActor();
 
   return useQuery<BookingLead[]>({
@@ -11,7 +11,7 @@ export function useGetBookingLeads() {
       if (!actor) throw new Error('Actor not initialized');
       return actor.getBookingLeads();
     },
-    enabled: !!actor && !isFetching,
+    enabled: !!actor && !isFetching && enabled,
   });
 }
 
