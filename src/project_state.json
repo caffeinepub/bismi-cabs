@@ -1,165 +1,32 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 19,
-  "summary": "BISMI CABS website now includes customer-facing Booking and Rate Card pages, with the Leads/Booking Lead page restricted to admin/owner only (not visible to customers).",
-  "architectural_notes": [
-    "Production website is served via an ICP canister; the shareable URL may require the correct canisterId or a stable gateway mapping to avoid 'Canister ID Not Resolved'.",
-    "Add role-based access (or allowlist by Principal) so the Leads/Booking Leads page/route is hidden and blocked for non-admin users; customers should only see Booking and Rate Card pages when opening the shared link."
-  ],
-  "known_issues": [
-    "Users report the website link is not opening and shows 'Canister ID Not Resolved' (likely due to canister not deployed/expired or gateway resolution issue)."
-  ],
+  "projectStateVersion": 3,
+  "summary": "New project",
+  "architectural_notes": [],
+  "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-a-dedicated-login-page-for-the-bismi-cabs-website-that-uses-internet-identity-no-username-password-as-the-authentication-method",
-      "title": "Add a dedicated login page for the BISMI CABS website that uses Internet Identity (no username/password) as the authentication method.",
+      "id": "feature-allow-customer-mode-users-to-open-the-booking-page-directly-from-a-shared-customer-link-even-when-they-are-not-logged-in-no-forced-redirect-to-the-login-page",
+      "title": "Allow customer-mode users to open the Booking page directly from a shared customer link even when they are not logged in (no forced redirect to the Login page).",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-the-login-ui-content-for-bismi-cabs-on-the-login-page-including-app-name-bismi-cabs-the-contact-number-9500344749-and-space-for-a-brand-logo",
-      "title": "Implement the login UI content for BISMI CABS on the login page, including: app name 'BISMI CABS', the contact number '9500344749', and space for a brand logo.",
+      "id": "feature-update-the-customer-share-link-generation-so-it-produces-a-url-that-deep-links-into-the-booking-flow-e-g-includes-a-parameter-that-the-app-uses-to-open-the-booking-page-on-load",
+      "title": "Update the customer share link generation so it produces a URL that deep-links into the Booking flow (e.g., includes a parameter that the app uses to open the booking page on load).",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-apply-a-coherent-cab-service-appropriate-visual-theme-across-the-login-page-colors-typography-layout-using-a-distinct-style-that-aligns-with-the-bismi-cabs-branding",
-      "title": "Apply a coherent, cab-service-appropriate visual theme across the login page (colors, typography, layout) using a distinct style that aligns with the BISMI CABS branding.",
+      "id": "feature-make-the-booking-form-usable-without-internet-identity-login-in-customer-mode-including-enabling-submission-when-the-visitor-is-anonymous",
+      "title": "Make the booking form usable without Internet Identity login in customer mode, including enabling submission when the visitor is anonymous.",
       "reqIds": [
-        "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-use-the-provided-uploaded-images-as-the-basis-for-web-ready-brand-assets-by-producing-cleaned-cropped-logo-images-and-placing-them-as-static-files-under-frontend-public-assets-generated-then-render-them-on-the-login-page",
-      "title": "Use the provided uploaded images as the basis for web-ready brand assets by producing cleaned/cropped logo images and placing them as static files under frontend/public/assets/generated, then render them on the login page.",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-booking-form-page-in-the-frontend-that-allows-an-authenticated-user-to-submit-a-booking-lead-with-inputs-for-customer-name-customer-phone-pickup-location-drop-location-pickup-date-time-and-notes",
-      "title": "Add a Booking Form page in the frontend that allows an authenticated user to submit a booking/lead with inputs for: customer name, customer phone, pickup location, drop location, pickup date/time, and notes.",
-      "reqIds": [
-        "REQ-8"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-leads-page-customer-details-leads-in-the-frontend-that-lists-submitted-booking-leads-in-a-clear-table-list-view-and-supports-basic-viewing-of-all-captured-fields-per-lead",
-      "title": "Add a Leads page (customer details & leads) in the frontend that lists submitted booking leads in a clear table/list view and supports basic viewing of all captured fields per lead.",
-      "reqIds": [
-        "REQ-9"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-the-app-navigation-so-users-can-access-login-booking-form-and-leads-pages-from-within-the-app-mobile-friendly-after-successful-login-provide-an-obvious-path-to-open-the-booking-form-and-leads-pages",
-      "title": "Update the app navigation so users can access Login, Booking Form, and Leads pages from within the app (mobile-friendly). After successful login, provide an obvious path to open the Booking Form and Leads pages.",
-      "reqIds": [
-        "REQ-10"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-extend-the-existing-react-query-setup-with-queries-mutations-for-creating-leads-and-listing-leads-reusing-the-authenticated-actor-from-the-existing-useactor-hook",
-      "title": "Extend the existing React Query setup with queries/mutations for creating leads and listing leads, reusing the authenticated actor from the existing useActor hook.",
-      "reqIds": [
-        "REQ-11"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-the-branding-tagline-text-since-2014-to-the-bismi-cabs-ui-so-it-appears-consistently-on-the-login-home-experience",
-      "title": "Add the branding tagline text \"Since 2014\" to the BISMI CABS UI so it appears consistently on the login/home experience.",
-      "reqIds": [
-        "REQ-12"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-new-authenticated-frontend-page-for-managing-and-viewing-the-rate-card-price-list-allow-an-authorized-user-to-upload-replace-the-rate-card-and-allow-authenticated-users-to-view-download-the-latest-uploaded-rate-card",
-      "title": "Add a new authenticated frontend page for managing and viewing the rate card/price list: allow an authorized user to upload/replace the rate card, and allow authenticated users to view/download the latest uploaded rate card.",
-      "reqIds": [
-        "REQ-14"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-extend-app-navigation-and-client-side-routing-to-include-the-new-rate-card-page-following-the-existing-pattern-used-for-login-booking-leads-navigation",
-      "title": "Extend app navigation and client-side routing to include the new Rate Card page, following the existing pattern used for Login/Booking/Leads navigation.",
-      "reqIds": [
-        "REQ-15"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-extend-the-existing-react-query-hook-layer-to-support-fetching-latest-rate-card-metadata-downloading-latest-rate-card-bytes-and-uploading-a-new-rate-card-reusing-the-authenticated-actor-from-the-existing-useactor-hook",
-      "title": "Extend the existing React Query hook layer to support: fetching latest rate card metadata, downloading latest rate card bytes, and uploading a new rate card, reusing the authenticated actor from the existing useActor hook.",
-      "reqIds": [
-        "REQ-16"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-the-rate-card-page-ui-to-display-the-latest-bismi-cabs-pricing-details-as-on-page-text-table-using-the-exact-values-provided-by-the-user-sedan-one-way-drop-per-km-14-rs-sedan-round-trip-per-km-12-rs-suv-one-way-drop-per-km-19-rs-suv-round-trip-per-km-18-rs-innova-one-way-drop-per-km-20-rs-innova-round-trip-per-km-19-rs-crysta-one-way-drop-per-km-22-rs-crysta-round-trip-per-km-20-rs-driver-allowance-one-way-400-rs-driver-allowance-round-trip-500-rs-minimum-coverage-one-way-drop-130-km-minimum-coverage-round-trip-250-km",
-      "title": "Update the Rate Card page UI to display the latest BISMI CABS pricing details (as on-page text/table) using the exact values provided by the user: Sedan one-way drop per km: 14 Rs; Sedan round trip per km: 12 Rs; SUV one-way drop per km: 19 Rs; SUV round trip per km: 18 Rs; Innova one-way drop per km: 20 Rs; Innova round trip per km: 19 Rs; Crysta one-way drop per km: 22 Rs; Crysta round trip per km: 20 Rs; Driver allowance (one-way): 400 Rs; Driver allowance (round trip): 500 Rs; Minimum coverage (one-way drop): 130 km; Minimum coverage (round trip): 250 km.",
-      "reqIds": [
-        "REQ-17"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-keep-the-existing-rate-card-file-view-download-and-admin-upload-functionality-intact-on-the-rate-card-page-and-ensure-the-newly-displayed-pricing-section-does-not-block-downloading-the-currently-uploaded-rate-card-file-if-present-or-uploading-a-replacement-file-for-admins",
-      "title": "Keep the existing rate card file view/download and admin upload functionality intact on the Rate Card page, and ensure the newly displayed pricing section does not block downloading the currently uploaded rate card file (if present) or uploading a replacement file (for admins).",
-      "reqIds": [
-        "REQ-18"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-the-rate-card-on-page-pricing-display-frontend-src-components-ratepricingsection-tsx-to-include-two-additional-pricing-sections-using-english-labels-and-the-exact-values-provided-by-the-user-1-a-local-transfer-section-with-minimum-distance-and-base-price-plus-extra-per-km-price-for-sedan-suv-innova-and-crysta-and-2-a-rental-rate-card-section-with-package-duration-distance-and-base-price-plus-extra-per-hour-and-extra-per-km-prices-for-sedan-suv-innova-and-crysta-keep-the-existing-per-km-one-way-round-trip-pricing-and-the-existing-additional-information-driver-allowance-minimum-coverage-visible-as-well",
-      "title": "Update the Rate Card on-page pricing display (frontend/src/components/RatePricingSection.tsx) to include two additional pricing sections, using English labels and the exact values provided by the user: (1) a \"Local Transfer\" section with minimum distance and base price plus extra per-km price for SEDAN, SUV, Innova, and CRYSTA; and (2) a \"Rental Rate Card\" section with package duration+distance and base price plus extra per-hour and extra per-km prices for SEDAN, SUV, Innova, and CRYSTA. Keep the existing per-km One-way/Round-trip pricing and the existing \"Additional Information\" (driver allowance, minimum coverage) visible as well.",
-      "reqIds": [
-        "REQ-19"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-re-deploy-the-bismi-cabs-frontend-canister-so-the-website-is-reachable-again-and-no-longer-returns-the-gateway-error-canister-id-not-resolved-when-opened-by-users",
-      "title": "Re-deploy the BISMI CABS frontend canister so the website is reachable again and no longer returns the gateway error \"Canister ID Not Resolved\" when opened by users.",
-      "reqIds": [
-        "REQ-20"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-after-re-deploying-provide-a-single-definitive-copy-pasteable-working-website-url-for-users-to-open-the-bismi-cabs-app",
-      "title": "After re-deploying, provide a single definitive, copy-pasteable working website URL for users to open the BISMI CABS app.",
-      "reqIds": [
-        "REQ-21"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-hide-all-ui-entry-points-to-the-leads-page-for-non-admin-users-so-that-customers-who-open-the-shared-website-link-only-see-new-booking-and-rate-card-navigation-actions",
-      "title": "Hide all UI entry points to the \"Leads\" page for non-admin users so that customers who open the shared website link only see \"New Booking\" and \"Rate Card\" navigation/actions.",
-      "reqIds": [
-        "REQ-22"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-prevent-non-admin-users-from-accessing-the-leads-page-even-if-they-manually-navigate-to-it-e-g-via-any-ui-state-or-deep-link-and-show-an-english-not-authorized-message-with-clear-buttons-to-go-to-new-booking-and-rate-card-instead",
-      "title": "Prevent non-admin users from accessing the Leads page even if they manually navigate to it (e.g., via any UI state or deep link), and show an English \"Not authorized\" message with clear buttons to go to \"New Booking\" and \"Rate Card\" instead.",
-      "reqIds": [
-        "REQ-23"
+        "REQ-3"
       ],
       "version": 1
     }
@@ -167,99 +34,12 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Create a login page for the BISMI CABS website (user authentication entry point).",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "Add a minimal backend endpoint to confirm authentication by returning the caller’s Principal (used by the frontend to show the logged-in identity state).",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-5",
-      "summary": "Add a customer booking form page to collect lead details (e.g., name, phone, pickup/drop, date/time, notes).",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-6",
-      "summary": "Add a leads/customer details page (admin view) to list and review submitted bookings/leads.",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-7",
-      "summary": "Implement backend storage and APIs to save booking form submissions and retrieve them for the leads/admin page.",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-8",
-      "summary": "Add backend data model and persistent storage for customer booking leads, including fields: leadId, customerName, customerPhone, pickupLocation, dropLocation, pickupDateTime (text), notes (optional), createdAt (timestamp), and createdBy (caller Principal).",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-9",
-      "summary": "Implement backend APIs to (1) create a new booking lead and (2) list booking leads for display on the leads page.",
-      "reqIds": [
-        "REQ-7"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-10",
-      "summary": "Add/ensure the branding text \"Since 2014\" appears correctly on the BISMI CABS website (likely on the login/landing UI).",
-      "reqIds": [],
-      "status": "in_progress"
-    },
-    {
-      "id": "AR-11",
-      "summary": "Add a rate card / price list upload feature (upload and manage pricing list for the customer app).",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-12",
-      "summary": "Add backend data model and APIs to upload and retrieve the latest BISMI CABS rate card / price list for the customer app, storing the uploaded file bytes and basic metadata (original filename, content type, uploadedAt timestamp, uploadedBy Principal).",
-      "reqIds": [
-        "REQ-13"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-13",
-      "summary": "Update the BISMI CABS rate card with the latest prices: Sedan (oneway 14/km, round 12/km), SUV (oneway 19/km, round 18/km), Innova (oneway 20/km, round 19/km), Crysta (oneway 22/km, round 20/km), driver allowance (oneway 400, round 500), minimum coverage (oneway 130 km, round 250 km).",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-14",
-      "summary": "Update the Rate Card pricing display to include the newly provided 'Local transfer' and 'Rental rate card' prices (minimum km/packages, base price, extra km, extra hour) for Sedan/SUV/Innova/Crysta.",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-15",
-      "summary": "Re-deploy the BISMI CABS website frontend canister and provide a new working website link (current link shows 'Canister ID Not Resolved').",
-      "reqIds": [],
-      "status": "in_progress"
-    },
-    {
-      "id": "AR-16",
-      "summary": "Restrict the Booking Leads (admin) page so it is only accessible/visible to the owner/admin account; customer shared link should show only Booking Form and Rate Card pages.",
+      "summary": "Provide a customer-facing booking link that opens the booking flow directly without requiring login",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "gameProjectType": "none",
-  "projectName": "BISMI CABS",
+  "projectName": "Customer share link opens booking directly without requiring login",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

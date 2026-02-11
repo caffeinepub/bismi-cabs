@@ -1,55 +1,70 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T10:22:52.194Z",
+  "generatedAt": "2026-02-11T14:32:29.939Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 2,
+    "total": 3,
+    "implemented": 3,
     "items": [
       {
-        "id": "REQ-22",
-        "summary": "Hide all UI entry points to the \"Leads\" page for non-admin users so that customers who open the shared website link only see \"New Booking\" and \"Rate Card\" navigation/actions.",
+        "id": "REQ-1",
+        "summary": "Allow customer-mode users to open the Booking page directly from a shared customer link even when they are not logged in (no forced redirect to the Login page).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/AppShell.tsx",
-          "frontend/src/pages/LoginPage.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/utils/urlParams.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/AppShell.tsx",
-          "frontend/src/pages/LoginPage.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/utils/urlParams.ts"
         ]
       },
       {
-        "id": "REQ-23",
-        "summary": "Prevent non-admin users from accessing the Leads page even if they manually navigate to it (e.g., via any UI state or deep link), and show an English \"Not authorized\" message with clear buttons to go to \"New Booking\" and \"Rate Card\" instead.",
+        "id": "REQ-2",
+        "summary": "Update the customer share link generation so it produces a URL that deep-links into the Booking flow (e.g., includes a parameter that the app uses to open the booking page on load).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/pages/LeadsPage.tsx",
+          "frontend/src/utils/canonicalUrl.ts",
+          "frontend/src/components/ShareAppLinkCard.tsx",
           "frontend/src/App.tsx"
         ],
         "matchedFiles": [
+          "frontend/src/utils/canonicalUrl.ts",
+          "frontend/src/components/ShareAppLinkCard.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Make the booking form usable without Internet Identity login in customer mode, including enabling submission when the visitor is anonymous.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/BookingFormPage.tsx",
           "frontend/src/hooks/useQueries.ts",
-          "frontend/src/pages/LeadsPage.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/BookingFormPage.tsx",
           "frontend/src/App.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/App.tsx",
-    "frontend/src/components/AppShell.tsx",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/LeadsPage.tsx",
-    "frontend/src/pages/LoginPage.tsx",
+    "frontend/src/components/ShareAppLinkCard.tsx",
+    "frontend/src/pages/BookingFormPage.tsx",
+    "frontend/src/utils/canonicalUrl.ts",
+    "frontend/src/utils/urlParams.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

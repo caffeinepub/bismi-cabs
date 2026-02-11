@@ -1,55 +1,72 @@
 {
   "kind": "build_request",
-  "title": "Restrict Leads page visibility so customer shared link shows only New Booking and Rate Card",
+  "title": "Customer share link opens booking directly without requiring login",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-22",
-      "text": "Hide all UI entry points to the \"Leads\" page for non-admin users so that customers who open the shared website link only see \"New Booking\" and \"Rate Card\" navigation/actions.",
+      "id": "REQ-1",
+      "text": "Allow customer-mode users to open the Booking page directly from a shared customer link even when they are not logged in (no forced redirect to the Login page).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "I share to costmer link just open link just show new booking & rate card only don't show booking lead page ok booking lead page only for me ok"
+          "Costmer  link without login direct to booking pls update that type of link"
         ]
       },
       "acceptanceCriteria": [
-        "When a non-admin authenticated user views the app, the bottom navigation (mobile) does not show the \"Leads\" tab.",
-        "When a non-admin authenticated user views the app, the desktop navigation does not show the \"View Leads\" button.",
-        "When a non-admin authenticated user is on the Login/Home page while authenticated, the \"View All Leads\" button is not shown.",
-        "Admin users continue to see the Leads navigation/actions as before."
+        "When visiting the customer share link in a fresh/incognito browser session (not logged in), the app shows the Booking page instead of the Login page.",
+        "Owner mode behavior remains unchanged: visiting the owner link while not logged in shows the Login page / requires Internet Identity sign-in."
       ]
     },
     {
-      "id": "REQ-23",
-      "text": "Prevent non-admin users from accessing the Leads page even if they manually navigate to it (e.g., via any UI state or deep link), and show an English \"Not authorized\" message with clear buttons to go to \"New Booking\" and \"Rate Card\" instead.",
+      "id": "REQ-2",
+      "text": "Update the customer share link generation so it produces a URL that deep-links into the Booking flow (e.g., includes a parameter that the app uses to open the booking page on load).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "don't show booking lead page ok booking lead page only for me ok"
+          "Costmer  link without login direct to booking pls update that type of link"
         ]
       },
       "acceptanceCriteria": [
-        "If a non-admin user attempts to open the Leads page, the app does not display lead data and instead shows a \"Not authorized\" message in English.",
-        "The \"Not authorized\" state includes a button to navigate to \"New Booking\" and a button to navigate to \"Rate Card\".",
-        "Admin users can access the Leads page normally without seeing the \"Not authorized\" state."
+        "The Customer Link shown in `frontend/src/components/ShareAppLinkCard.tsx` generates a URL that opens the Booking page directly on first load.",
+        "Copy Link and Open actions for the customer link use the updated deep-link URL.",
+        "The Owner Link continues to generate an owner-mode URL and does not deep-link to customer booking."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Make the booking form usable without Internet Identity login in customer mode, including enabling submission when the visitor is anonymous.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Costmer  link without login direct to booking pls update that type of link"
+        ]
+      },
+      "acceptanceCriteria": [
+        "On the Booking page while not logged in, the booking form fields and “Create Booking” submission are available (no “Authentication Required” blocking screen).",
+        "Submitting a booking as an anonymous visitor successfully creates a booking lead and shows the existing success UI state.",
+        "Backend no longer traps with an authorization error for anonymous callers of `createBookingLead` (it should accept anonymous/guest callers for booking creation).",
+        "Admin/owner-only access to view all leads remains protected (non-admin/non-authorized callers still cannot access `getBookingLeads`)."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/components/ui or any frontend immutablePaths listed in SYSTEM_CONTEXT.",
-    "Keep Internet Identity authentication as-is.",
-    "Do not change backend authorization logic unless required to implement the UI restriction (prefer frontend-only gating using the existing admin check hook)."
+    "Backend must remain a single Motoko actor in `backend/main.mo` (no additional services).",
+    "Do not edit files under `frontend/src/components/ui` or any paths listed as immutable in SYSTEM_CONTEXT.",
+    "Use English for any user-facing text."
   ],
   "nonGoals": [
-    "Implementing a new authentication system or username/password login.",
-    "Adding new pages beyond restricting access to the existing Leads page.",
-    "Changing booking creation flow or rate card upload/download behavior."
+    "Adding third-party authentication providers (only Internet Identity is supported).",
+    "Adding external databases or third-party backend services.",
+    "Implementing real-time updates (WebSockets/push)."
   ],
   "imageRequirements": {
     "required": [],

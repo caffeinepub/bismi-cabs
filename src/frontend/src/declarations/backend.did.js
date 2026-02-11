@@ -36,8 +36,11 @@ export const BookingLead = IDL.Record({
   'pickupDateTime' : IDL.Text,
   'pickupLocation' : IDL.Text,
 });
-export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 export const ExternalBlob = IDL.Vec(IDL.Nat8);
+export const UserProfile = IDL.Record({
+  'dp' : IDL.Opt(ExternalBlob),
+  'name' : IDL.Text,
+});
 export const RateCard = IDL.Record({
   'originalFileName' : IDL.Text,
   'contentType' : IDL.Text,
@@ -74,6 +77,7 @@ export const idlService = IDL.Service({
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addAuthorizedStaff' : IDL.Func([IDL.Principal], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'createBookingLead' : IDL.Func(
       [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
@@ -83,6 +87,7 @@ export const idlService = IDL.Service({
   'getBookingLeads' : IDL.Func([], [IDL.Vec(BookingLead)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getCurrentUserType' : IDL.Func([], [IDL.Text], ['query']),
   'getLatestRateCard' : IDL.Func([], [IDL.Opt(RateCard)], ['query']),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
@@ -90,7 +95,9 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'removeAuthorizedStaff' : IDL.Func([IDL.Principal], [], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'uploadDp' : IDL.Func([ExternalBlob], [], []),
   'uploadRateCard' : IDL.Func([ExternalBlob, IDL.Text, IDL.Text], [], []),
 });
 
@@ -125,8 +132,11 @@ export const idlFactory = ({ IDL }) => {
     'pickupDateTime' : IDL.Text,
     'pickupLocation' : IDL.Text,
   });
-  const UserProfile = IDL.Record({ 'name' : IDL.Text });
   const ExternalBlob = IDL.Vec(IDL.Nat8);
+  const UserProfile = IDL.Record({
+    'dp' : IDL.Opt(ExternalBlob),
+    'name' : IDL.Text,
+  });
   const RateCard = IDL.Record({
     'originalFileName' : IDL.Text,
     'contentType' : IDL.Text,
@@ -163,6 +173,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addAuthorizedStaff' : IDL.Func([IDL.Principal], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'createBookingLead' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Opt(IDL.Text)],
@@ -172,6 +183,7 @@ export const idlFactory = ({ IDL }) => {
     'getBookingLeads' : IDL.Func([], [IDL.Vec(BookingLead)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getCurrentUserType' : IDL.Func([], [IDL.Text], ['query']),
     'getLatestRateCard' : IDL.Func([], [IDL.Opt(RateCard)], ['query']),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
@@ -179,7 +191,9 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'removeAuthorizedStaff' : IDL.Func([IDL.Principal], [], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'uploadDp' : IDL.Func([ExternalBlob], [], []),
     'uploadRateCard' : IDL.Func([ExternalBlob, IDL.Text, IDL.Text], [], []),
   });
 };

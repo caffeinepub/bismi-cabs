@@ -2,11 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-hide-all-ui-entry-points-to-the-leads-page-for-non-admin-users-so-that-customers-who-open-the-shared-website-link-only-see-new-booking-and-rate-card-navigation-actions",
-      "featureTitle": "Hide all UI entry points to the \"Leads\" page for non-admin users so that customers who open the shared website link only see \"New Booking\" and \"Rate Card\" navigation/actions.",
+      "featureId": "feature-allow-customer-mode-users-to-open-the-booking-page-directly-from-a-shared-customer-link-even-when-they-are-not-logged-in-no-forced-redirect-to-the-login-page",
+      "featureTitle": "Allow customer-mode users to open the Booking page directly from a shared customer link even when they are not logged in (no forced redirect to the Login page).",
       "files": [
-        "frontend/src/components/AppShell.tsx",
-        "frontend/src/pages/LoginPage.tsx"
+        "frontend/src/App.tsx",
+        "frontend/src/utils/urlParams.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -18,17 +18,17 @@
         "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-22"
+        "REQ-1"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-prevent-non-admin-users-from-accessing-the-leads-page-even-if-they-manually-navigate-to-it-e-g-via-any-ui-state-or-deep-link-and-show-an-english-not-authorized-message-with-clear-buttons-to-go-to-new-booking-and-rate-card-instead",
-      "featureTitle": "Prevent non-admin users from accessing the Leads page even if they manually navigate to it (e.g., via any UI state or deep link), and show an English \"Not authorized\" message with clear buttons to go to \"New Booking\" and \"Rate Card\" instead.",
+      "featureId": "feature-update-the-customer-share-link-generation-so-it-produces-a-url-that-deep-links-into-the-booking-flow-e-g-includes-a-parameter-that-the-app-uses-to-open-the-booking-page-on-load",
+      "featureTitle": "Update the customer share link generation so it produces a URL that deep-links into the Booking flow (e.g., includes a parameter that the app uses to open the booking page on load).",
       "files": [
         "frontend/src/App.tsx",
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/LeadsPage.tsx"
+        "frontend/src/components/ShareAppLinkCard.tsx",
+        "frontend/src/utils/canonicalUrl.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -40,7 +40,28 @@
         "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-23"
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-make-the-booking-form-usable-without-internet-identity-login-in-customer-mode-including-enabling-submission-when-the-visitor-is-anonymous",
+      "featureTitle": "Make the booking form usable without Internet Identity login in customer mode, including enabling submission when the visitor is anonymous.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/BookingFormPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
       ],
       "confidence": "high"
     }

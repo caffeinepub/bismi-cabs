@@ -34,6 +34,7 @@ export interface RateCard {
     uploadedBy: Principal;
 }
 export interface UserProfile {
+    dp?: ExternalBlob;
     name: string;
 }
 export enum UserRole {
@@ -42,14 +43,18 @@ export enum UserRole {
     guest = "guest"
 }
 export interface backendInterface {
+    addAuthorizedStaff(staff: Principal): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     createBookingLead(customerName: string, customerPhone: string, pickupLocation: string, dropLocation: string, pickupDateTime: string, notes: string | null): Promise<BookingLead>;
     getBookingLeads(): Promise<Array<BookingLead>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
+    getCurrentUserType(): Promise<string>;
     getLatestRateCard(): Promise<RateCard | null>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
+    removeAuthorizedStaff(staff: Principal): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    uploadDp(blob: ExternalBlob): Promise<void>;
     uploadRateCard(file: ExternalBlob, originalFileName: string, contentType: string): Promise<void>;
 }

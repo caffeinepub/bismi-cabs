@@ -7,13 +7,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, CheckCircle2, AlertCircle, LogIn } from 'lucide-react';
+import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { TripTotalCalculator } from '@/components/TripTotalCalculator';
+import { isCustomerMode } from '../utils/appMode';
 
 export function BookingFormPage() {
-  const { identity, login, isLoggingIn } = useInternetIdentity();
+  const { identity } = useInternetIdentity();
   const createLead = useCreateBookingLead();
 
   const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
+  const customerMode = isCustomerMode();
 
   const [formData, setFormData] = useState({
     customerName: '',
@@ -59,8 +62,6 @@ export function BookingFormPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isAuthenticated) return;
-
     if (!validateForm()) return;
 
     try {
@@ -101,158 +102,142 @@ export function BookingFormPage() {
     }
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className="flex items-center justify-center p-4 min-h-[calc(100vh-12rem)]">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CardTitle>Authentication Required</CardTitle>
-            <CardDescription>Please sign in to create a booking</CardDescription>
+  return (
+    <div className="container mx-auto px-4 py-6 max-w-4xl">
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Booking Form */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl">New Booking</CardTitle>
+            <CardDescription>
+              {customerMode && !isAuthenticated 
+                ? 'Fill in the details to create a booking request'
+                : 'Fill in the details to create a new booking lead'}
+            </CardDescription>
           </CardHeader>
+
           <CardContent>
-            <Button onClick={login} disabled={isLoggingIn} className="w-full" size="lg">
-              {isLoggingIn ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                <>
-                  <LogIn className="mr-2 h-5 w-5" />
-                  Sign in with Internet Identity
-                </>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {showSuccess && (
+                <Alert className="bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800">
+                  <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
+                  <AlertDescription className="text-green-800 dark:text-green-200">
+                    Booking created successfully! We'll contact you soon at the provided phone number.
+                  </AlertDescription>
+                </Alert>
               )}
-            </Button>
+
+              {createLead.isError && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    Failed to create booking. Please try again.
+                    {createLead.error instanceof Error && `: ${createLead.error.message}`}
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="customerName">
+                  Customer Name <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="customerName"
+                  value={formData.customerName}
+                  onChange={(e) => handleChange('customerName', e.target.value)}
+                  placeholder="Enter customer name"
+                  className={errors.customerName ? 'border-destructive' : ''}
+                />
+                {errors.customerName && <p className="text-sm text-destructive">{errors.customerName}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="customerPhone">
+                  Phone Number <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="customerPhone"
+                  type="tel"
+                  value={formData.customerPhone}
+                  onChange={(e) => handleChange('customerPhone', e.target.value)}
+                  placeholder="9500344749"
+                  className={errors.customerPhone ? 'border-destructive' : ''}
+                />
+                {errors.customerPhone && <p className="text-sm text-destructive">{errors.customerPhone}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="pickupLocation">
+                  Pickup Location <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="pickupLocation"
+                  value={formData.pickupLocation}
+                  onChange={(e) => handleChange('pickupLocation', e.target.value)}
+                  placeholder="Enter pickup address"
+                  className={errors.pickupLocation ? 'border-destructive' : ''}
+                />
+                {errors.pickupLocation && <p className="text-sm text-destructive">{errors.pickupLocation}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="dropLocation">
+                  Drop Location <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="dropLocation"
+                  value={formData.dropLocation}
+                  onChange={(e) => handleChange('dropLocation', e.target.value)}
+                  placeholder="Enter drop address"
+                  className={errors.dropLocation ? 'border-destructive' : ''}
+                />
+                {errors.dropLocation && <p className="text-sm text-destructive">{errors.dropLocation}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="pickupDateTime">
+                  Pickup Date & Time <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="pickupDateTime"
+                  type="datetime-local"
+                  value={formData.pickupDateTime}
+                  onChange={(e) => handleChange('pickupDateTime', e.target.value)}
+                  className={errors.pickupDateTime ? 'border-destructive' : ''}
+                />
+                {errors.pickupDateTime && <p className="text-sm text-destructive">{errors.pickupDateTime}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="notes">Additional Notes</Label>
+                <Textarea
+                  id="notes"
+                  value={formData.notes}
+                  onChange={(e) => handleChange('notes', e.target.value)}
+                  placeholder="Any special requirements or notes"
+                  rows={3}
+                />
+              </div>
+
+              <Button type="submit" className="w-full" size="lg" disabled={createLead.isPending}>
+                {createLead.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Creating Booking...
+                  </>
+                ) : (
+                  'Create Booking'
+                )}
+              </Button>
+            </form>
           </CardContent>
         </Card>
+
+        {/* Trip Total Calculator */}
+        <div className="lg:sticky lg:top-6 lg:self-start">
+          <TripTotalCalculator />
+        </div>
       </div>
-    );
-  }
-
-  return (
-    <div className="container mx-auto px-4 py-6 max-w-2xl">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">New Booking</CardTitle>
-          <CardDescription>Fill in the details to create a new booking lead</CardDescription>
-        </CardHeader>
-
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {showSuccess && (
-              <Alert className="bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800">
-                <CheckCircle2 className="h-4 w-4 text-green-600 dark:text-green-400" />
-                <AlertDescription className="text-green-800 dark:text-green-200">
-                  Booking created successfully! You can create another booking or view all leads.
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {createLead.isError && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  Failed to create booking. Please try again.
-                  {createLead.error instanceof Error && `: ${createLead.error.message}`}
-                </AlertDescription>
-              </Alert>
-            )}
-
-            <div className="space-y-2">
-              <Label htmlFor="customerName">
-                Customer Name <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="customerName"
-                value={formData.customerName}
-                onChange={(e) => handleChange('customerName', e.target.value)}
-                placeholder="Enter customer name"
-                className={errors.customerName ? 'border-destructive' : ''}
-              />
-              {errors.customerName && <p className="text-sm text-destructive">{errors.customerName}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="customerPhone">
-                Phone Number <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="customerPhone"
-                type="tel"
-                value={formData.customerPhone}
-                onChange={(e) => handleChange('customerPhone', e.target.value)}
-                placeholder="9500344749"
-                className={errors.customerPhone ? 'border-destructive' : ''}
-              />
-              {errors.customerPhone && <p className="text-sm text-destructive">{errors.customerPhone}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="pickupLocation">
-                Pickup Location <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="pickupLocation"
-                value={formData.pickupLocation}
-                onChange={(e) => handleChange('pickupLocation', e.target.value)}
-                placeholder="Enter pickup address"
-                className={errors.pickupLocation ? 'border-destructive' : ''}
-              />
-              {errors.pickupLocation && <p className="text-sm text-destructive">{errors.pickupLocation}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="dropLocation">
-                Drop Location <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="dropLocation"
-                value={formData.dropLocation}
-                onChange={(e) => handleChange('dropLocation', e.target.value)}
-                placeholder="Enter drop address"
-                className={errors.dropLocation ? 'border-destructive' : ''}
-              />
-              {errors.dropLocation && <p className="text-sm text-destructive">{errors.dropLocation}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="pickupDateTime">
-                Pickup Date & Time <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="pickupDateTime"
-                type="datetime-local"
-                value={formData.pickupDateTime}
-                onChange={(e) => handleChange('pickupDateTime', e.target.value)}
-                className={errors.pickupDateTime ? 'border-destructive' : ''}
-              />
-              {errors.pickupDateTime && <p className="text-sm text-destructive">{errors.pickupDateTime}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="notes">Additional Notes</Label>
-              <Textarea
-                id="notes"
-                value={formData.notes}
-                onChange={(e) => handleChange('notes', e.target.value)}
-                placeholder="Any special requirements or instructions..."
-                rows={4}
-              />
-            </div>
-
-            <Button type="submit" disabled={createLead.isPending} className="w-full" size="lg">
-              {createLead.isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Creating Booking...
-                </>
-              ) : (
-                'Create Booking'
-              )}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
     </div>
   );
 }

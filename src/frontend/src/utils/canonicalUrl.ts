@@ -1,12 +1,16 @@
 import { getPersistedUrlParameter } from './urlParams';
 
+export type AppMode = 'customer' | 'owner';
+
 /**
  * Computes the canonical shareable URL for the application
  * This URL is guaranteed to work when shared with customers
  * 
+ * @param mode - Optional mode parameter to include in the URL
+ * @param deepLink - Optional deep-link parameter (e.g., 'booking' for customer mode)
  * @returns The canonical URL that can be shared
  */
-export function getCanonicalUrl(): string {
+export function getCanonicalUrl(mode?: AppMode, deepLink?: string): string {
   // Get the base URL from the current location
   const protocol = window.location.protocol;
   const hostname = window.location.hostname;
@@ -18,26 +22,40 @@ export function getCanonicalUrl(): string {
     baseUrl += `:${port}`;
   }
   
+  // Build query parameters
+  const params = new URLSearchParams();
+  
   // Check if we have a canisterId parameter (either in URL or session)
   const canisterId = getPersistedUrlParameter('canisterId');
-  
-  // If we have a canisterId, include it in the URL for reliable routing
   if (canisterId) {
-    return `${baseUrl}/?canisterId=${canisterId}`;
+    params.set('canisterId', canisterId);
   }
   
-  // Otherwise return the base URL
-  return baseUrl;
+  // Add mode parameter if specified
+  if (mode) {
+    params.set('mode', mode);
+  }
+  
+  // Add deep-link parameter if specified (only for customer mode)
+  if (deepLink && mode === 'customer') {
+    params.set('page', deepLink);
+  }
+  
+  // Return URL with parameters if any exist
+  const queryString = params.toString();
+  return queryString ? `${baseUrl}/?${queryString}` : baseUrl;
 }
 
 /**
- * Copies the canonical URL to the clipboard
+ * Copies a canonical URL to the clipboard
  * 
+ * @param mode - Optional mode parameter to include in the URL
+ * @param deepLink - Optional deep-link parameter (e.g., 'booking' for customer mode)
  * @returns Promise that resolves to true if successful, false otherwise
  */
-export async function copyCanonicalUrlToClipboard(): Promise<boolean> {
+export async function copyCanonicalUrlToClipboard(mode?: AppMode, deepLink?: string): Promise<boolean> {
   try {
-    const url = getCanonicalUrl();
+    const url = getCanonicalUrl(mode, deepLink);
     await navigator.clipboard.writeText(url);
     return true;
   } catch (error) {

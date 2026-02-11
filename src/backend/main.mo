@@ -5,15 +5,21 @@ import Time "mo:core/Time";
 import Principal "mo:core/Principal";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
-import MixinStorage "blob-storage/Mixin";
 import Storage "blob-storage/Storage";
+import MixinStorage "blob-storage/Mixin";
+
+import Blob "mo:core/Blob";
 
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
+
   include MixinStorage();
 
   var nextId = 0;
+  let authorizedStaff = Map.empty<Principal, Bool>();
+
+  let bharzIznqv72xd7IigbgpPrincipal = Principal.fromText("bharz-iznqv-72xd7-6tloz-pdzc2-6llb7-g5zjo-pnt5g-igbgp-qmeff-jqe");
 
   type BookingLead = {
     leadId : Nat;
@@ -29,20 +35,25 @@ actor {
 
   public type UserProfile = {
     name : Text;
+    dp : ?Storage.ExternalBlob;
   };
 
-  let leads = Map.empty<Nat, BookingLead>();
-  let userProfiles = Map.empty<Principal, UserProfile>();
-
-  type RateCard = {
-    file : Storage.ExternalBlob;
-    uploadedBy : Principal;
-    uploadedAt : Time.Time;
-    originalFileName : Text;
-    contentType : Text;
+  public shared ({ caller }) func uploadDp(blob : Storage.ExternalBlob) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can upload display pictures");
+    };
+    let userProfile = switch (userProfiles.get(caller)) {
+      case (null) {
+        {
+          name = "NoName";
+          dp = null;
+        };
+      };
+      case (?profile) { profile };
+    };
+    let updatedProfile = { userProfile with dp = ?blob };
+    userProfiles.add(caller, updatedProfile);
   };
-
-  var latestRateCard : ?RateCard = null;
 
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
@@ -57,6 +68,19 @@ actor {
     };
     userProfiles.get(user);
   };
+
+  var leads = Map.empty<Nat, BookingLead>();
+  let userProfiles = Map.empty<Principal, UserProfile>();
+
+  type RateCard = {
+    file : Storage.ExternalBlob;
+    uploadedBy : Principal;
+    uploadedAt : Time.Time;
+    originalFileName : Text;
+    contentType : Text;
+  };
+
+  var latestRateCard : ?RateCard = null;
 
   public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
@@ -73,10 +97,6 @@ actor {
     pickupDateTime : Text,
     notes : ?Text,
   ) : async BookingLead {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can create booking leads");
-    };
-
     let leadId = nextId;
     nextId += 1;
 
@@ -97,10 +117,9 @@ actor {
   };
 
   public query ({ caller }) func getBookingLeads() : async [BookingLead] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view leads");
+    if (not (AccessControl.isAdmin(accessControlState, caller)) and not isAuthorizedStaffOrSpecialPrincipal(caller)) {
+      Runtime.trap("Unauthorized: Only owner or authorized staff can view all leads");
     };
-
     leads.values().toArray();
   };
 
@@ -129,5 +148,46 @@ actor {
       Runtime.trap("Unauthorized: Only users can view rate cards");
     };
     latestRateCard;
+  };
+
+  public shared ({ caller }) func addAuthorizedStaff(staff : Principal) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can add authorized staff");
+    };
+    authorizedStaff.add(staff, true);
+  };
+
+  public shared ({ caller }) func removeAuthorizedStaff(staff : Principal) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can remove authorized staff");
+    };
+    authorizedStaff.remove(staff);
+  };
+
+  public query ({ caller }) func getCurrentUserType() : async Text {
+    if (isAdminOrAuthorizedStaff(caller)) {
+      "authorizedStaff";
+    } else {
+      let role = AccessControl.getUserRole(accessControlState, caller);
+      switch (role) {
+        case (#admin) {
+          Runtime.trap("Unexpected: Admin should also be marked as authorized staff");
+        };
+        case (#user) { "user" };
+        case (#guest) { "guest" };
+      };
+    };
+  };
+
+  func isAuthorizedStaff(caller : Principal) : Bool {
+    authorizedStaff.containsKey(caller);
+  };
+
+  func isAdminOrAuthorizedStaff(caller : Principal) : Bool {
+    AccessControl.isAdmin(accessControlState, caller) or isAuthorizedStaffOrSpecialPrincipal(caller);
+  };
+
+  func isAuthorizedStaffOrSpecialPrincipal(caller : Principal) : Bool {
+    isAuthorizedStaff(caller) or caller.toText() == bharzIznqv72xd7IigbgpPrincipal.toText();
   };
 };

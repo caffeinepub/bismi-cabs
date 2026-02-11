@@ -1,53 +1,78 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Frontend-only admin gating for Leads navigation and access",
+  "title": "Anonymous customer deep-link to Booking without login redirect",
   "requirements": [
     {
-      "id": "REQ-22",
-      "summary": "Hide all UI entry points to the Leads page for non-admin users while keeping Leads visible for admins.",
+      "id": "REQ-1",
+      "summary": "Allow customer share links to open the Booking page without forcing a redirect to Login when the visitor is not authenticated, while keeping owner mode auth gating unchanged.",
       "acceptanceCriteria": [
-        "When a non-admin authenticated user views the app, the bottom navigation (mobile) does not show the \"Leads\" tab.",
-        "When a non-admin authenticated user views the app, the desktop navigation does not show the \"View Leads\" button.",
-        "When a non-admin authenticated user is on the Login/Home page while authenticated, the \"View All Leads\" button is not shown.",
-        "Admin users continue to see the Leads navigation/actions as before."
+        "When visiting the customer share link in a fresh/incognito browser session (not logged in), the app shows the Booking page instead of the Login page.",
+        "Owner mode behavior remains unchanged: visiting the owner link while not logged in shows the Login page / requires Internet Identity sign-in."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/AppShell.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Conditionally render the mobile \"Leads\" tab and the desktop \"View Leads\" button only when the current user is an admin (use the authorization capability via the existing admin check hook, e.g., useIsCallerAdmin). Verify the component's usage instructions before implementing."
+          "description": "Update the top-level navigation/auth guard so unauthenticated visitors are allowed to render the Booking page in customer mode (including when arriving via deep-link), while keeping the existing owner-mode unauthenticated behavior (Login required) unchanged. Use the existing authorization infrastructure behavior where anonymous callers are treated as guests (authorization component). Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/pages/LoginPage.tsx",
+          "path": "frontend/src/utils/urlParams.ts",
           "operation": "modify",
-          "description": "Hide the authenticated \"View All Leads\" button for non-admin users by checking admin status (use the authorization capability via the existing admin check hook, e.g., useIsCallerAdmin). Verify the component's usage instructions before implementing."
+          "description": "Add a small helper (or reuse existing helpers) to reliably read the booking deep-link parameter from the URL (query or hash query) so App can decide initial navigation without introducing new routes. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
-      "id": "REQ-23",
-      "summary": "Block non-admin access to the Leads page and show a Not authorized message with navigation buttons to New Booking and Rate Card.",
+      "id": "REQ-2",
+      "summary": "Generate a customer share URL that deep-links into the Booking flow on first load, and ensure Copy/Open actions use that deep-link URL while owner link behavior stays owner-only.",
       "acceptanceCriteria": [
-        "If a non-admin user attempts to open the Leads page, the app does not display lead data and instead shows a \"Not authorized\" message in English.",
-        "The \"Not authorized\" state includes a button to navigate to \"New Booking\" and a button to navigate to \"Rate Card\".",
-        "Admin users can access the Leads page normally without seeing the \"Not authorized\" state."
+        "The Customer Link shown in `frontend/src/components/ShareAppLinkCard.tsx` generates a URL that opens the Booking page directly on first load.",
+        "Copy Link and Open actions for the customer link use the updated deep-link URL.",
+        "The Owner Link continues to generate an owner-mode URL and does not deep-link to customer booking."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useQueries.ts",
+          "path": "frontend/src/utils/canonicalUrl.ts",
           "operation": "modify",
-          "description": "Update the booking leads query hook to support conditional fetching (e.g., accept an enabled flag/options) so the Leads data query can be disabled when the user is not an admin, preventing any lead data from loading for non-admins. Verify the component's usage instructions before implementing."
+          "description": "Extend canonical URL generation to support an optional deep-link parameter for the customer booking flow (e.g., a page/flow indicator) while preserving existing mode and canisterId behavior; ensure owner URLs do not include the booking deep-link. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/pages/LeadsPage.tsx",
+          "path": "frontend/src/components/ShareAppLinkCard.tsx",
           "operation": "modify",
-          "description": "Add an admin gate using the existing admin check hook (authorization capability) and render an English \"Not authorized\" UI for non-admins that includes two clear buttons: one to navigate to \"New Booking\" and one to navigate to \"Rate Card\". Ensure lead data fetching is disabled unless admin. Verify the component's usage instructions before implementing."
+          "description": "Update the Customer Link to use the new deep-link-capable canonical URL (including Copy Link and Open actions) so it opens Booking directly on load; keep Owner Link generation unchanged (owner-mode URL only, no booking deep-link). Verify the component's usage instructions before implementing."
         },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Wire navigation into the Leads page by passing the existing onNavigate/setCurrentPage handler into LeadsPage so the unauthorized state buttons can route users to \"booking\" (New Booking) and \"rateCard\" (Rate Card) without adding new pages."
+          "description": "On initial load, detect the deep-link parameter produced by the customer URL and set the initial page state to Booking when in customer mode; ensure owner mode ignores booking deep-links and continues to land on Login when unauthenticated. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Make the booking form usable and submittable in customer mode without Internet Identity login by allowing anonymous visitors to create booking leads and see the existing success UI.",
+      "acceptanceCriteria": [
+        "On the Booking page while not logged in, the booking form fields and “Create Booking” submission are available (no “Authentication Required” blocking screen).",
+        "Submitting a booking as an anonymous visitor successfully creates a booking lead and shows the existing success UI state.",
+        "Backend no longer traps with an authorization error for anonymous callers of `createBookingLead` (it should accept anonymous/guest callers for booking creation).",
+        "Admin/owner-only access to view all leads remains protected (non-admin/non-authorized callers still cannot access `getBookingLeads`)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/BookingFormPage.tsx",
+          "operation": "modify",
+          "description": "Remove the blocking unauthenticated screen in customer mode and allow the booking form to render and submit even when the user is anonymous; keep the existing success/error UI behavior. If desired, provide an optional sign-in action without making it required. Leverage the existing anonymous actor behavior from core infrastructure + authorization (anonymous treated as guest). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Ensure the booking lead creation mutation works correctly for both authenticated and anonymous visitors (using the actor provided by `useBackendActor`) and that error handling surfaces authorization failures cleanly if backend is not yet updated. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Confirm the unauthenticated navigation guard does not block customer-mode Booking page rendering, so anonymous users can access and submit the booking form, while leaving leads/admin areas protected via existing owner-mode and authorization checks. Verify the component's usage instructions before implementing."
         }
       ]
     }

@@ -206,3 +206,14 @@ export function getSecretFromHash(paramName: string): string | null {
 export function getSecretParameter(paramName: string): string | null {
     return getSecretFromHash(paramName);
 }
+
+/**
+ * Checks if a deep-link parameter is present in the URL
+ * Used to determine initial page navigation for customer links
+ *
+ * @param paramName - The name of the deep-link parameter (e.g., 'page')
+ * @returns The parameter value if found, null otherwise
+ */
+export function getDeepLinkParameter(paramName: string): string | null {
+    return getUrlParameter(paramName);
+}

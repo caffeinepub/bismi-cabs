@@ -1,17 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { VEHICLE_RATES, HOURLY_RATES, DRIVER_ALLOWANCE, MINIMUM_COVERAGE } from '@/utils/rates';
+import { AlertCircle } from 'lucide-react';
 
 export function RatePricingSection() {
-  const vehicleRates = [
-    { vehicle: 'SEDAN', oneWay: 14, roundTrip: 12 },
-    { vehicle: 'SUV', oneWay: 19, roundTrip: 18 },
-    { vehicle: 'Innova', oneWay: 20, roundTrip: 19 },
-    { vehicle: 'CRYSTA', oneWay: 22, roundTrip: 20 },
-  ];
-
   const additionalInfo = [
-    { label: 'Driver allowance', oneWay: '₹400', roundTrip: '₹500' },
-    { label: 'Minimum coverage', oneWay: '130 km', roundTrip: '250 km' },
+    { label: 'Driver allowance', oneWay: `₹${DRIVER_ALLOWANCE.oneWay}`, roundTrip: `₹${DRIVER_ALLOWANCE.roundTrip}` },
+    { label: 'Minimum coverage', oneWay: `${MINIMUM_COVERAGE.oneWay} km`, roundTrip: `${MINIMUM_COVERAGE.roundTrip} km` },
   ];
 
   const localTransferRates = [
@@ -30,6 +25,72 @@ export function RatePricingSection() {
 
   return (
     <div className="space-y-6">
+      {/* Important Notes */}
+      <Card className="border-amber-500/30 bg-amber-50/50 dark:bg-amber-950/20">
+        <CardHeader>
+          <CardTitle className="text-xl flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-500" />
+            Important Notes
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="flex items-start gap-3">
+            <div className="rounded-full bg-amber-600 dark:bg-amber-500 text-white w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-semibold mt-0.5">
+              1
+            </div>
+            <p className="text-sm text-foreground">
+              <strong>Every trip:</strong> Toll & tax excluded.
+            </p>
+          </div>
+          <div className="flex items-start gap-3">
+            <div className="rounded-full bg-amber-600 dark:bg-amber-500 text-white w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-semibold mt-0.5">
+              2
+            </div>
+            <p className="text-sm text-foreground">
+              <strong>Waiting charge:</strong> Minimum 30 minutes free. After 30 minutes, payment is compulsory.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Hourly Rates */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl">Hourly Rates</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {/* Desktop Table */}
+          <div className="hidden md:block overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="font-semibold">Vehicle Type</TableHead>
+                  <TableHead className="font-semibold text-right">Rate per Hour</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {HOURLY_RATES.map((rate) => (
+                  <TableRow key={rate.vehicle}>
+                    <TableCell className="font-medium">{rate.vehicle}</TableCell>
+                    <TableCell className="text-right">₹{rate.perHour}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="md:hidden space-y-3">
+            {HOURLY_RATES.map((rate) => (
+              <div key={rate.vehicle} className="rounded-lg border border-border bg-card p-4 flex items-center justify-between">
+                <h3 className="font-semibold text-base">{rate.vehicle}</h3>
+                <p className="font-medium text-lg">₹{rate.perHour}/hr</p>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Current Pricing (One-way/Round-trip) */}
       <Card>
         <CardHeader>
@@ -47,7 +108,7 @@ export function RatePricingSection() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {vehicleRates.map((rate) => (
+                {VEHICLE_RATES.map((rate) => (
                   <TableRow key={rate.vehicle}>
                     <TableCell className="font-medium">{rate.vehicle}</TableCell>
                     <TableCell className="text-right">₹{rate.oneWay}</TableCell>
@@ -60,7 +121,7 @@ export function RatePricingSection() {
 
           {/* Vehicle Rates Cards - Mobile */}
           <div className="md:hidden space-y-3">
-            {vehicleRates.map((rate) => (
+            {VEHICLE_RATES.map((rate) => (
               <div key={rate.vehicle} className="rounded-lg border border-border bg-card p-4 space-y-2">
                 <h3 className="font-semibold text-base">{rate.vehicle}</h3>
                 <div className="grid grid-cols-2 gap-3 text-sm">

@@ -30,7 +30,7 @@ export interface RateCard {
   'uploadedBy' : Principal,
 }
 export type Time = bigint;
-export interface UserProfile { 'name' : string }
+export interface UserProfile { 'dp' : [] | [ExternalBlob], 'name' : string }
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };
@@ -62,6 +62,7 @@ export interface _SERVICE {
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addAuthorizedStaff' : ActorMethod<[Principal], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'createBookingLead' : ActorMethod<
     [string, string, string, string, string, [] | [string]],
@@ -70,10 +71,13 @@ export interface _SERVICE {
   'getBookingLeads' : ActorMethod<[], Array<BookingLead>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getCurrentUserType' : ActorMethod<[], string>,
   'getLatestRateCard' : ActorMethod<[], [] | [RateCard]>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
+  'removeAuthorizedStaff' : ActorMethod<[Principal], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'uploadDp' : ActorMethod<[ExternalBlob], undefined>,
   'uploadRateCard' : ActorMethod<[ExternalBlob, string, string], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;
