@@ -1,0 +1,78 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-16T21:34:49.473Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 3,
+    "implemented": 2,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Provide an irreversible “Delete everything” action that, when confirmed by an authenticated admin/owner, permanently wipes all stored application data (booking leads, user profiles, uploaded rate card, and authorized staff list) and marks the site as deleted so the app is no longer usable.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/DeleteWebsiteCard.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/ProfilePage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/DeleteWebsiteCard.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/ProfilePage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "When the site is marked deleted, block access to all app functionality for all visitors (including anonymous visitors) and show a dedicated “Site Deleted” screen instead of booking/profile/leads/rate-card pages.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/App.tsx",
+          "frontend/src/components/AppShell.tsx",
+          "frontend/src/components/SiteDeletedScreen.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/App.tsx",
+          "frontend/src/components/AppShell.tsx",
+          "frontend/src/components/SiteDeletedScreen.tsx"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Enforce site-deleted access control on the backend so all user/admin operations are rejected after deletion, except for a lightweight mechanism to detect the deleted state from the frontend.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/AppShell.tsx",
+    "frontend/src/components/DeleteWebsiteCard.tsx",
+    "frontend/src/components/SiteDeletedScreen.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/pages/ProfilePage.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

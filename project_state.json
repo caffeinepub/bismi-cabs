@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "User requested to delete/disable all existing deployed websites/app (remove everything).",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-provide-an-irreversible-delete-everything-action-that-when-confirmed-by-an-authenticated-admin-owner-permanently-wipes-all-stored-application-data-booking-leads-user-profiles-uploaded-rate-card-and-authorized-staff-list-and-marks-the-site-as-deleted-so-the-app-is-no-longer-usable",
+      "title": "Provide an irreversible “Delete everything” action that, when confirmed by an authenticated admin/owner, permanently wipes all stored application data (booking leads, user profiles, uploaded rate card, and authorized staff list) and marks the site as deleted so the app is no longer usable.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-when-the-site-is-marked-deleted-block-access-to-all-app-functionality-for-all-visitors-including-anonymous-visitors-and-show-a-dedicated-site-deleted-screen-instead-of-booking-profile-leads-rate-card-pages",
+      "title": "When the site is marked deleted, block access to all app functionality for all visitors (including anonymous visitors) and show a dedicated “Site Deleted” screen instead of booking/profile/leads/rate-card pages.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Delete everything / fully disable the deployed app so it is no longer accessible.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Enforce site-deleted access control on the backend so all user/admin operations are rejected after deletion, except for a lightweight mechanism to detect the deleted state from the frontend.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Bismi Cabs",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

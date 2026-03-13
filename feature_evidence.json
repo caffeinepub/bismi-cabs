@@ -1,0 +1,50 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-provide-an-irreversible-delete-everything-action-that-when-confirmed-by-an-authenticated-admin-owner-permanently-wipes-all-stored-application-data-booking-leads-user-profiles-uploaded-rate-card-and-authorized-staff-list-and-marks-the-site-as-deleted-so-the-app-is-no-longer-usable",
+      "featureTitle": "Provide an irreversible “Delete everything” action that, when confirmed by an authenticated admin/owner, permanently wipes all stored application data (booking leads, user profiles, uploaded rate card, and authorized staff list) and marks the site as deleted so the app is no longer usable.",
+      "files": [
+        "frontend/src/components/DeleteWebsiteCard.tsx",
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/ProfilePage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-when-the-site-is-marked-deleted-block-access-to-all-app-functionality-for-all-visitors-including-anonymous-visitors-and-show-a-dedicated-site-deleted-screen-instead-of-booking-profile-leads-rate-card-pages",
+      "featureTitle": "When the site is marked deleted, block access to all app functionality for all visitors (including anonymous visitors) and show a dedicated “Site Deleted” screen instead of booking/profile/leads/rate-card pages.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/AppShell.tsx",
+        "frontend/src/components/SiteDeletedScreen.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

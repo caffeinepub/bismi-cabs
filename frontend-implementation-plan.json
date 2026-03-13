@@ -1,0 +1,70 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Bismi Cabs — irreversible delete + site-deleted lockout UI (frontend-only)",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Add an irreversible admin-only “Delete everything” UI flow that triggers full deletion and reliably transitions the UI into a deleted/disabled state.",
+      "acceptanceCriteria": [
+        "As an authenticated admin/owner, I can trigger a deletion flow that requires a strong confirmation step before proceeding.",
+        "After deletion completes, all leads, profiles, authorized staff entries, and the latest rate card are removed from canister state.",
+        "After deletion completes, the canister is marked as deleted and remains in the deleted state across reloads/upgrades.",
+        "Re-running the delete action after deletion results in a clear error (or no-op) indicating the site has already been deleted."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/DeleteWebsiteCard.tsx",
+          "operation": "modify",
+          "description": "Tighten the irreversible confirmation UX to a stronger, explicit phrase aligned with the requested admin intent (e.g., require typing “Yes, delete everything”), keep the two-step confirmation, and ensure errors for “already deleted” are displayed clearly using the existing error mapping. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "On successful deletion, immediately set the cached site-deleted state to true (in addition to invalidations) so the UI transitions to the dedicated deleted screen without requiring a refresh; on deletion errors indicating “already deleted”, also set the cached deleted state true (or show a clear no-op message). Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/ProfilePage.tsx",
+          "operation": "modify",
+          "description": "Ensure the admin-only delete section remains gated by the existing admin check and add a user-visible guard state if the admin check is still loading (avoid flashing the delete UI). Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "When the site is deleted, render a dedicated “Site Deleted” screen and prevent all navigation/actions from rendering or operating across the app.",
+      "acceptanceCriteria": [
+        "When the backend reports the site is deleted, the UI renders a dedicated \"Site Deleted\" screen and does not render booking/profile/leads/rate-card content.",
+        "Navigation controls and share-link actions are disabled or hidden when the site is deleted.",
+        "Attempting any data action while deleted results in a user-visible error state or the \"Site Deleted\" screen rather than a broken UI."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Replace the current deleted-state detection (which infers deletion by trapping on getCallerUserRole) with the dedicated backend capability checkIfSiteIsDeleted() so anonymous visitors can reliably detect deletion; keep retry off and caching long-lived, and ensure the query can run as soon as an actor is available. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add consistent handling across data queries/mutations to detect “site deleted” errors (using the same string checks as mapBackendError) and flip the cached siteDeletedState to true so any attempted action while deleted leads to the Site Deleted screen rather than partial/broken UI. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Ensure the app renders SiteDeletedScreen whenever the deleted-state query reports true, and treat deleted-state detection as a top-priority gate ahead of rendering booking/profile/leads/rate-card content. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/AppShell.tsx",
+          "operation": "modify",
+          "description": "Harden UI disablement for the deleted state: hide/disable share controls and suppress owner navigation rendering when siteDeleted is true (even during transient states) so navigation controls cannot be used while deleted. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/SiteDeletedScreen.tsx",
+          "operation": "modify",
+          "description": "Review and finalize English-only messaging for clarity and consistency with other error states (no functional access paths), keeping the dedicated deleted screen as the sole rendered view in deleted state. Verify the component's usage instructions before implementing."
+        }
+      ]
+    }
+  ]
+}

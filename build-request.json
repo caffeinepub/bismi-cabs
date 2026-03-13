@@ -1,0 +1,89 @@
+{
+  "kind": "build_request",
+  "title": "Permanently delete the site and fully disable the app",
+  "projectName": "Bismi Cabs",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Provide an irreversible “Delete everything” action that, when confirmed by an authenticated admin/owner, permanently wipes all stored application data (booking leads, user profiles, uploaded rate card, and authorized staff list) and marks the site as deleted so the app is no longer usable.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-4",
+          "msg-5"
+        ],
+        "quotes": [
+          "If you want me to delete all your websites, just say: • Yes, delete everything",
+          "Yes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "As an authenticated admin/owner, I can trigger a deletion flow that requires a strong confirmation step before proceeding.",
+        "After deletion completes, all leads, profiles, authorized staff entries, and the latest rate card are removed from canister state.",
+        "After deletion completes, the canister is marked as deleted and remains in the deleted state across reloads/upgrades.",
+        "Re-running the delete action after deletion results in a clear error (or no-op) indicating the site has already been deleted."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "When the site is marked deleted, block access to all app functionality for all visitors (including anonymous visitors) and show a dedicated “Site Deleted” screen instead of booking/profile/leads/rate-card pages.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "Yes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When the backend reports the site is deleted, the UI renders a dedicated \"Site Deleted\" screen and does not render booking/profile/leads/rate-card content.",
+        "Navigation controls and share-link actions are disabled or hidden when the site is deleted.",
+        "Attempting any data action while deleted results in a user-visible error state or the \"Site Deleted\" screen rather than a broken UI."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Enforce site-deleted access control on the backend so all user/admin operations are rejected after deletion, except for a lightweight mechanism to detect the deleted state from the frontend.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "Yes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All existing update/query methods that expose site functionality are rejected with a consistent error when the site is deleted.",
+        "The frontend can reliably determine the deleted state even for anonymous users (without requiring successful authenticated calls).",
+        "Error messages related to deleted state are stable enough to be mapped to a \"Site Deleted\" UI state."
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must remain a single Motoko actor in backend/main.mo (single-actor architecture).",
+    "Do not edit files under frontend/src/components/ui or any paths listed as immutable in SYSTEM_CONTEXT.",
+    "Use English for all user-facing text."
+  ],
+  "nonGoals": [
+    "Deleting the canister itself or changing IC deployment settings outside the app’s own delete/disable behavior.",
+    "Adding third-party authentication or any non-Internet-Identity auth provider.",
+    "Adding external databases or off-canister backups."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}
